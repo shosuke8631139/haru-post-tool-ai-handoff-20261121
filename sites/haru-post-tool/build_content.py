@@ -1,0 +1,180 @@
+from pathlib import Path
+import json
+import re
+import shutil
+
+ROOT = Path(__file__).resolve().parents[2]
+OUTPUT_DIR = Path(__file__).resolve().parent / "dist"
+ASSET_DIR = OUTPUT_DIR / "assets"
+OUTPUT = OUTPUT_DIR / "content.json"
+
+POSTS = [
+    {
+        "id": "cant-live-with-people",
+        "file": "人と暮らせない_投稿セット.md",
+        "title": "石橋典子『人と暮らせない』",
+        "sourceTitle": "参考動画：『人と暮らせない』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=9Pq1prm-MZ8",
+        "updatedAt": "2026年11月21日",
+        "personal": "人と暮らせない_個人アカウント用.png",
+        "studio": "人と暮らせない_ダンススタジオ用.png",
+        "video": "live_alone_short/人と暮らせない_ショート動画.mp4",
+        "poster": "live_alone_short/slides/slide-01.png",
+        "videoLabel": "『人と暮らせない』個人版60秒ショート",
+        "videoDuration": "60秒",
+        "studioVideo": "live_alone_studio_short/人と暮らせない_スタジオ版ショート動画.mp4",
+        "studioPoster": "live_alone_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『人と暮らせない』スタジオ版60秒ショート",
+    },
+    {
+        "id": "money-life",
+        "file": "お金のある人生_投稿セット.md",
+        "title": "三浦さやか『「お金のある人生」を叶える習慣』",
+        "sourceTitle": "参考動画：『「お金のある人生」を叶える習慣』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=Z9bs2Gsw20c",
+        "updatedAt": "2026年11月20日",
+        "personal": "お金のある人生_個人アカウント用.png",
+        "studio": "お金のある人生_ダンススタジオ用.png",
+        "video": "money_life_short/お金のある人生_ショート動画.mp4",
+        "poster": "money_life_short/slides/slide-01.png",
+        "videoLabel": "『お金のある人生を叶える習慣』53秒ショート",
+        "videoDuration": "53秒",
+        "studioVideo": "money_life_studio_short/お金のある人生_スタジオ版ショート動画.mp4",
+        "studioPoster": "money_life_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『お金のある人生を叶える習慣』スタジオ版53秒ショート",
+    },
+    {
+        "id": "scientific-job",
+        "file": "科学的な適職_投稿セット.md",
+        "title": "鈴木祐『新版 科学的な適職』",
+        "sourceTitle": "参考動画：『新版 科学的な適職』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=xROUrM1HRho",
+        "updatedAt": "2026年11月19日",
+        "personal": "科学的な適職_個人アカウント用.png",
+        "studio": "科学的な適職_ダンススタジオ用.png",
+        "video": "scientific_job_short/科学的な適職_ショート動画.mp4",
+        "poster": "scientific_job_short/slides/slide-01.png",
+    },
+    {
+        "id": "your-life",
+        "file": "君だけの人生_投稿セット.md",
+        "title": "伊藤羊一『君は、君だけの人生を歩め』",
+        "sourceTitle": "参考動画：『君は、君だけの人生を歩め』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=tmLFOQwR-U8",
+        "updatedAt": "2026年11月18日",
+        "personal": "君だけの人生_個人アカウント用.png",
+        "studio": "君だけの人生_ダンススタジオ用.png",
+    },
+    {
+        "id": "self-axis",
+        "file": "自分軸習慣_投稿セット.md",
+        "title": "一番ケ瀬瑶子『「やるべきこと」に追われない 自分軸習慣』",
+        "sourceTitle": "参考動画：『自分軸習慣』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=Y77Z3n3z-40",
+        "updatedAt": "2026年11月18日",
+        "personal": "自分軸習慣_個人アカウント用_詳細版.png",
+        "studio": "自分軸習慣_ダンススタジオ用_詳細版.png",
+    },
+    {
+        "id": "is-it-necessary",
+        "file": "それって必要_投稿セット.md",
+        "title": "『それって、必要？』",
+        "sourceTitle": "参考動画：『それって、必要？』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=l2mxHV-zvQc",
+        "updatedAt": "2026年11月18日",
+        "personal": "それって必要_個人アカウント用.png",
+        "studio": "それって必要_ダンススタジオ用.png",
+    },
+    {
+        "id": "subtraction-thinking",
+        "file": "引き算思考_投稿セット.md",
+        "title": "ミニマリストTakeru『人生は「引き算」で軽くなる』",
+        "sourceTitle": "参考動画：『人生は「引き算」で軽くなる』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=HXcbklUixQk",
+        "updatedAt": "2026年11月18日",
+        "personal": "引き算思考_個人アカウント用.png",
+        "studio": "引き算思考_ダンススタジオ用.png",
+    },
+]
+
+
+def section(text: str, start: str, end: str) -> str:
+    match = re.search(
+        rf"^## {re.escape(start)}\s*$\n(.*?)(?=^## {re.escape(end)}\s*$)",
+        text,
+        re.MULTILINE | re.DOTALL,
+    )
+    if not match:
+        raise ValueError(f"Section not found: {start}")
+    return match.group(1).strip()
+
+
+def plain(value: str) -> str:
+    value = re.sub(r"^#{3,6} .*$", "", value, flags=re.MULTILINE)
+    value = re.sub(r"^[-*] ", "", value, flags=re.MULTILINE)
+    return re.sub(r"\n{3,}", "\n\n", value).strip()
+
+
+def build_post(config: dict) -> dict:
+    source = ROOT / "outputs" / config["file"]
+    text = source.read_text(encoding="utf-8")
+    long_post = plain(section(text, "長文投稿", "約500文字投稿"))
+    medium_post = plain(section(text, "約500文字投稿", "X用・140文字以内"))
+    x_post = plain(section(text, "X用・140文字以内", "ハッシュタグ候補"))
+    image_heading = "画像内テキスト案" if "## 画像内テキスト案" in text else "画像内テキスト"
+    hashtag_block = section(text, "ハッシュタグ候補", image_heading)
+    hashtags = " ".join(re.findall(r"#\S+", hashtag_block))
+
+    post_asset_dir = ASSET_DIR / config["id"]
+    post_asset_dir.mkdir(parents=True, exist_ok=True)
+    shutil.copy2(ROOT / "outputs" / config["personal"], post_asset_dir / "personal.png")
+    shutil.copy2(ROOT / "outputs" / config["studio"], post_asset_dir / "studio.png")
+
+    videos = []
+    if config.get("video"):
+        video_target = post_asset_dir / "short-personal.mp4"
+        poster_target = post_asset_dir / "short-personal-poster.png"
+        shutil.copy2(ROOT / "outputs" / config["video"], video_target)
+        shutil.copy2(ROOT / "outputs" / config["poster"], poster_target)
+        videos.append({
+            "label": config.get("videoLabel", "『新版 科学的な適職』60秒ショート"),
+            "src": f"assets/{config['id']}/short-personal.mp4",
+            "poster": f"assets/{config['id']}/short-personal-poster.png",
+            "duration": config.get("videoDuration", "55秒"),
+        })
+    if config.get("studioVideo"):
+        studio_video_target = post_asset_dir / "short-studio.mp4"
+        studio_poster_target = post_asset_dir / "short-studio-poster.png"
+        shutil.copy2(ROOT / "outputs" / config["studioVideo"], studio_video_target)
+        shutil.copy2(ROOT / "outputs" / config["studioPoster"], studio_poster_target)
+        videos.append({
+            "label": config["studioVideoLabel"],
+            "src": f"assets/{config['id']}/short-studio.mp4",
+            "poster": f"assets/{config['id']}/short-studio-poster.png",
+            "duration": config.get("videoDuration", "53秒"),
+        })
+
+    return {
+        "id": config["id"],
+        "title": config["title"],
+        "sourceTitle": config["sourceTitle"],
+        "sourceUrl": config["sourceUrl"],
+        "updatedAt": config["updatedAt"],
+        "longPost": long_post,
+        "mediumPost": medium_post,
+        "xPost": x_post,
+        "hashtags": hashtags,
+        "images": [
+            {"label": "個人アカウント用", "src": f"assets/{config['id']}/personal.png"},
+            {"label": "ダンススタジオ用", "src": f"assets/{config['id']}/studio.png"},
+        ],
+        "video": videos[0] if videos else None,
+        "videos": videos,
+    }
+
+
+payload = {"latest": POSTS[0]["id"], "items": [build_post(config) for config in POSTS]}
+OUTPUT.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+print(OUTPUT)
+for item in payload["items"]:
+    print(item["id"], len(item["longPost"]), len(item["mediumPost"]), len(item["xPost"]))

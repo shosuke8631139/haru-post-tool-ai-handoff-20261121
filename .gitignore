@@ -1,0 +1,25 @@
+# Local runtimes and large temporary work files
+.video_deps/
+.tools/
+tools/
+work/
+.tmp-*/
+__pycache__/
+*.pyc
+*.wav
+*.tmp
+
+# Generated video intermediates
+**/segment-*.mp4
+**/silent.mp4
+**/concat.txt
+**/backgrounds/
+
+# Site assets are rebuilt from outputs by build_content.py
+sites/haru-post-tool/dist/assets/
+
+# OS/editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
