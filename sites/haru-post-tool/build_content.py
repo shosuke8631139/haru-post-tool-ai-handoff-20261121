@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "japanese-origins",
+        "file": "日本人とは何か_投稿セット.md",
+        "title": "覚張隆史『日本人とは何か』",
+        "sourceTitle": "参考動画：『日本人とは何か』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=X6I-ZF4hkfA",
+        "updatedAt": "2026年11月21日",
+        "personal": "日本人とは何か_個人アカウント用.png",
+        "studio": "日本人とは何か_ダンススタジオ用.png",
+        "video": "japanese_origins_short/日本人とは何か_ショート動画.mp4",
+        "poster": "japanese_origins_short/slides/slide-01.png",
+        "videoLabel": "『日本人とは何か』個人版51秒ショート",
+        "videoDuration": "51秒",
+        "studioVideo": "japanese_origins_studio_short/日本人とは何か_スタジオ版ショート動画.mp4",
+        "studioPoster": "japanese_origins_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『日本人とは何か』スタジオ版51秒ショート",
+    },
+    {
         "id": "cant-live-with-people",
         "file": "人と暮らせない_投稿セット.md",
         "title": "石橋典子『人と暮らせない』",
