@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "clothes-declutter",
+        "file": "服捨て_投稿セット.md",
+        "title": "昼田祥子『服捨て 自分を解き放つメソッド』",
+        "sourceTitle": "参考動画：『服捨て 自分を解き放つメソッド』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=HYM-bLN9UmQ",
+        "updatedAt": "2026年11月21日",
+        "personal": "服捨て_個人アカウント用.png",
+        "studio": "服捨て_ダンススタジオ用.png",
+        "video": "clothes_declutter_short/服捨て_ショート動画.mp4",
+        "poster": "clothes_declutter_short/slides/slide-01.png",
+        "videoLabel": "『服捨て』個人版56秒ショート",
+        "videoDuration": "56秒",
+        "studioVideo": "clothes_declutter_studio_short/服捨て_スタジオ版ショート動画.mp4",
+        "studioPoster": "clothes_declutter_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『服捨て』スタジオ版56秒ショート",
+    },
+    {
         "id": "japanese-origins",
         "file": "日本人とは何か_投稿セット.md",
         "title": "覚張隆史『日本人とは何か』",
