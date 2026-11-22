@@ -1,6 +1,5 @@
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
-import numpy as np
 
 ROOT = Path("C:/Users/kurro/.gemini/antigravity/scratch/haru-post-tool-ai-handoff-20261121")
 OUT = ROOT / "outputs"
@@ -21,28 +20,39 @@ def draw_text_with_stroke(draw, xy, text, size, fill, stroke_fill="white", strok
     draw.text(xy, text, font=f, fill=fill, stroke_width=stroke_width, stroke_fill=stroke_fill, anchor=anchor, align=align)
 
 def draw_horizontal_colored_text(draw, center_xy, segments, size, stroke_fill="white", stroke_width=5, mincho=True):
-    # segments is list of (text, fill_color)
     f = font(size, bold=True, mincho=mincho)
-    # calculate total width
     widths = [f.getlength(text) for text, _ in segments]
     total_w = sum(widths)
-    start_x = center_xy[0] - total_w / 2.0
-    cur_x = start_x
+    cur_x = center_xy[0] - total_w / 2.0
     cy = center_xy[1]
     for (text, color), w in zip(segments, widths):
         draw.text((cur_x, cy), text, font=f, fill=color, stroke_width=stroke_width, stroke_fill=stroke_fill, anchor="lm")
         cur_x += w
 
+def cover_image(im, size):
+    ratio = max(size[0] / im.width, size[1] / im.height)
+    im = im.resize((round(im.width * ratio), round(im.height * ratio)), Image.Resampling.LANCZOS)
+    x = (im.width - size[0]) // 2
+    y = (im.height - size[1]) // 2
+    return im.crop((x, y, x + size[0], y + size[1]))
+
 # ========================================================
 # 1. STUDIO MASTER INFOGRAPHIC (春ちゃん・ロボット・猫)
 # ========================================================
 def render_studio():
-    # Base background: Warm sunny studio room / soft sky gradient
-    canvas = Image.new("RGBA", (SIZE, SIZE), (252, 249, 242, 255))
+    # Base background: Blend lovely warm closet artwork with soft veil
+    bg_art_path = BRAIN / "haruka_fukusute_slide_illustration_1795311720688.jpg"
+    if bg_art_path.exists():
+        base_bg = Image.open(bg_art_path).convert("RGBA")
+        base_bg = cover_image(base_bg, (SIZE, SIZE)).filter(ImageFilter.GaussianBlur(16))
+        veil = Image.new("RGBA", (SIZE, SIZE), (254, 252, 247, 230))
+        canvas = Image.alpha_composite(base_bg, veil)
+    else:
+        canvas = Image.new("RGBA", (SIZE, SIZE), (252, 249, 242, 255))
+    
     draw = ImageDraw.Draw(canvas)
 
     # Top header sky banner (y: 0 to 370)
-    # Beautiful morning sky with warm sunburst glow
     sky = Image.new("RGBA", (SIZE, 375), (0, 0, 0, 0))
     s_draw = ImageDraw.Draw(sky)
     for y in range(375):
@@ -50,44 +60,41 @@ def render_studio():
         r = int(140 * (1 - ratio) + 252 * ratio)
         g = int(195 * (1 - ratio) + 249 * ratio)
         b = int(248 * (1 - ratio) + 242 * ratio)
-        s_draw.line([(0, y), (SIZE, y)], fill=(r, g, b, 255))
+        s_draw.line([(0, y), (SIZE, y)], fill=(r, g, b, int(210 * (1 - ratio))))
     canvas.alpha_composite(sky, (0, 0))
+    draw = ImageDraw.Draw(canvas)
 
     # Top Title Plate
-    t_box = (50, 22, SIZE - 50, 126)
+    t_box = (50, 20, SIZE - 50, 126)
     draw.rounded_rectangle(t_box, 48, fill=(255, 255, 255), outline=(238, 185, 45), width=5)
     draw.rounded_rectangle((t_box[0] + 6, t_box[1] + 6, t_box[2] - 6, t_box[3] - 6), 42, fill=(255, 253, 246), outline=(252, 236, 192), width=3)
 
     title_segments = [
         ("服", "#D12626"),
         ("を捨てると、人生が", "#1A1A1A"),
-        ("軽く", "#D12626"),
-        ("なる", "#1A1A1A")
+        ("劇的に好転", "#D12626"),
+        ("する！", "#1A1A1A")
     ]
-    draw_horizontal_colored_text(draw, (SIZE // 2, 74), title_segments, 56, stroke_fill="white", stroke_width=5, mincho=True)
+    draw_horizontal_colored_text(draw, (SIZE // 2, 73), title_segments, 54, stroke_fill="white", stroke_width=5, mincho=True)
 
-    # Yellow ribbon for subtitle (y: 135 to 195)
+    # Yellow ribbon for subtitle
     r_box = (120, 134, SIZE - 120, 196)
     draw.rounded_rectangle(r_box, 28, fill=(255, 221, 0), outline=(226, 158, 0), width=4)
     draw_text_with_stroke(draw, (SIZE // 2, 165), "クローゼットから「他人軸」を手放し、自由を取り戻す", 31, "#172334", stroke_fill="#FFDD00", stroke_width=1)
 
     # Place Characters: Haruka on left, Robot on right top, Cat on right bottom
-    # Load character cutouts
     haruka = Image.open(BRAIN / "char_haruka.png").convert("RGBA")
-    # Haruka original size is ~(180, 240). Resize up to height ~205
     h_w, h_h = haruka.size
-    h_scale = 205 / float(h_h)
-    haruka_res = haruka.resize((round(h_w * h_scale), 205), Image.Resampling.LANCZOS)
-    canvas.alpha_composite(haruka_res, (70, 182))
+    h_scale = 210 / float(h_h)
+    haruka_res = haruka.resize((round(h_w * h_scale), 210), Image.Resampling.LANCZOS)
+    canvas.alpha_composite(haruka_res, (65, 180))
 
-    # Robot: original ~(160, 150)
     robot = Image.open(BRAIN / "char_robot.png").convert("RGBA")
     r_w, r_h = robot.size
     r_scale = 135 / float(r_h)
     robot_res = robot.resize((round(r_w * r_scale), 135), Image.Resampling.LANCZOS)
     canvas.alpha_composite(robot_res, (SIZE - 245, 186))
 
-    # Cat: original ~(170, 110)
     cat = Image.open(BRAIN / "char_cat.png").convert("RGBA")
     c_w, c_h = cat.size
     c_scale = 120 / float(c_h)
@@ -96,7 +103,7 @@ def render_studio():
 
     # Speech bubbles or decorative badge between Haruka and Robot
     mid_badge = (310, 225, 960, 360)
-    draw.rounded_rectangle(mid_badge, 28, fill=(255, 255, 255, 245), outline=(215, 139, 66), width=3)
+    draw.rounded_rectangle(mid_badge, 28, fill=(255, 255, 255, 248), outline=(215, 139, 66), width=3)
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 258), "なぜ服を捨てると、お金が増えるのか？", font=font(24, bold=True), fill="#BF3228", anchor="mm")
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 298), "① 視界のノイズが消える　② 流行・見栄の浪費がゼロに", font=font(19, bold=True), fill="#2C3E50", anchor="mm")
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 332), "③ 自分軸が定まり「本当に似合う最高の一着」に集中できる", font=font(17, bold=False), fill="#4A5568", anchor="mm")
@@ -116,7 +123,7 @@ def render_studio():
     cards_y2 = 865
 
     for x1, x2, border_color in [(c1_x1, c1_x2, (45, 119, 67)), (c2_x1, c2_x2, (38, 100, 158)), (c3_x1, c3_x2, (191, 50, 40))]:
-        draw.rounded_rectangle((x1, cards_y1, x2, cards_y2), 32, fill=(255, 255, 255), outline=border_color, width=4)
+        draw.rounded_rectangle((x1, cards_y1, x2, cards_y2), 32, fill=(255, 255, 255, 250), outline=border_color, width=4)
 
     # Headers
     draw.rounded_rectangle((c1_x1 + 6, cards_y1 + 6, c1_x2 - 6, cards_y1 + 82), 26, fill=(45, 119, 67))
@@ -150,7 +157,7 @@ def render_studio():
     draw_card_pill(c3_x1, c3_x2, 735, "時間とお金の自由", "軽やかに踊る毎日へ！", (191, 50, 40), (252, 238, 235))
 
     # Bottom 5 Mindsets Card (y: 885 to 1115)
-    draw.rounded_rectangle((c1_x1, 885, c3_x2, 1115), 32, fill=(255, 255, 255), outline=(215, 139, 66), width=4)
+    draw.rounded_rectangle((c1_x1, 885, c3_x2, 1115), 32, fill=(255, 255, 255, 252), outline=(215, 139, 66), width=4)
     draw.rounded_rectangle((c1_x1 + 6, 891, c3_x2 - 6, 946), 22, fill=(215, 139, 66))
     draw_text_with_stroke(draw, (SIZE // 2, 918), "クローゼットの迷いを断ち切る「3秒で手放す5つの思考」", 24, "white", stroke_fill="#D78B42", stroke_width=0)
 
@@ -181,7 +188,16 @@ def render_studio():
 # 2. PERSONAL MASTER INFOGRAPHIC (はるみち＆さくらじまお)
 # ========================================================
 def render_personal():
-    canvas = Image.new("RGBA", (SIZE, SIZE), (252, 249, 242, 255))
+    # Warm base background
+    bg_art_path = BRAIN / "haruka_fukusute_slide_illustration_1795311720688.jpg"
+    if bg_art_path.exists():
+        base_bg = Image.open(bg_art_path).convert("RGBA")
+        base_bg = cover_image(base_bg, (SIZE, SIZE)).filter(ImageFilter.GaussianBlur(16))
+        veil = Image.new("RGBA", (SIZE, SIZE), (255, 250, 242, 230))
+        canvas = Image.alpha_composite(base_bg, veil)
+    else:
+        canvas = Image.new("RGBA", (SIZE, SIZE), (252, 249, 242, 255))
+        
     draw = ImageDraw.Draw(canvas)
 
     # Top header gradient with gentle warm sunset glow
@@ -192,21 +208,22 @@ def render_personal():
         r = int(255 * (1 - ratio) + 252 * ratio)
         g = int(200 * (1 - ratio) + 249 * ratio)
         b = int(160 * (1 - ratio) + 242 * ratio)
-        s_draw.line([(0, y), (SIZE, y)], fill=(r, g, b, 255))
+        s_draw.line([(0, y), (SIZE, y)], fill=(r, g, b, int(210 * (1 - ratio))))
     canvas.alpha_composite(sky, (0, 0))
+    draw = ImageDraw.Draw(canvas)
 
     # Top Title Plate
-    t_box = (50, 22, SIZE - 50, 126)
+    t_box = (50, 20, SIZE - 50, 126)
     draw.rounded_rectangle(t_box, 48, fill=(255, 255, 255), outline=(215, 139, 66), width=5)
     draw.rounded_rectangle((t_box[0] + 6, t_box[1] + 6, t_box[2] - 6, t_box[3] - 6), 42, fill=(255, 253, 246), outline=(252, 236, 192), width=3)
 
     title_segments = [
         ("服", "#D12626"),
         ("を捨てると、人生が", "#1A1A1A"),
-        ("軽く", "#D12626"),
-        ("なる", "#1A1A1A")
+        ("劇的に好転", "#D12626"),
+        ("する！", "#1A1A1A")
     ]
-    draw_horizontal_colored_text(draw, (SIZE // 2, 74), title_segments, 56, stroke_fill="white", stroke_width=5, mincho=True)
+    draw_horizontal_colored_text(draw, (SIZE // 2, 73), title_segments, 54, stroke_fill="white", stroke_width=5, mincho=True)
 
     # Yellow ribbon for subtitle
     r_box = (120, 134, SIZE - 120, 196)
@@ -214,23 +231,21 @@ def render_personal():
     draw_text_with_stroke(draw, (SIZE // 2, 165), "クローゼットから「他人軸」を追い出し、自由を取り戻す", 31, "#172334", stroke_fill="#FFDD00", stroke_width=1)
 
     # Place Characters: Sakurajimao on left, Harumichi on right
-    # Sakurajimao: original ~(420, 706)
     sakurajimao = Image.open(BRAIN / "char_sakurajimao.png").convert("RGBA")
     s_w, s_h = sakurajimao.size
-    s_scale = 195 / float(s_h)
-    sakurajimao_res = sakurajimao.resize((round(s_w * s_scale), 195), Image.Resampling.LANCZOS)
-    canvas.alpha_composite(sakurajimao_res, (65, 182))
+    s_scale = 200 / float(s_h)
+    sakurajimao_res = sakurajimao.resize((round(s_w * s_scale), 200), Image.Resampling.LANCZOS)
+    canvas.alpha_composite(sakurajimao_res, (65, 178))
 
-    # Harumichi: original ~(450, 696)
     harumichi = Image.open(BRAIN / "char_harumichi.png").convert("RGBA")
     h_w, h_h = harumichi.size
-    h_scale = 195 / float(h_h)
-    harumichi_res = harumichi.resize((round(h_w * h_scale), 195), Image.Resampling.LANCZOS)
-    canvas.alpha_composite(harumichi_res, (SIZE - 200, 182))
+    h_scale = 200 / float(h_h)
+    harumichi_res = harumichi.resize((round(h_w * h_scale), 200), Image.Resampling.LANCZOS)
+    canvas.alpha_composite(harumichi_res, (SIZE - 200, 178))
 
     # Middle badge between Sakurajimao and Harumichi
     mid_badge = (240, 225, SIZE - 240, 360)
-    draw.rounded_rectangle(mid_badge, 28, fill=(255, 255, 255, 245), outline=(215, 139, 66), width=3)
+    draw.rounded_rectangle(mid_badge, 28, fill=(255, 255, 255, 248), outline=(215, 139, 66), width=3)
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 258), "なぜ服を捨てると、お金が増えるのか？", font=font(24, bold=True), fill="#BF3228", anchor="mm")
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 298), "① 視界のノイズが消える　② 流行・見栄の浪費がゼロに", font=font(19, bold=True), fill="#2C3E50", anchor="mm")
     draw.text(((mid_badge[0] + mid_badge[2]) // 2, 332), "③ クローゼットの歪みを整え、自分のお金と時間の主導権を取り戻す", font=font(17, bold=False), fill="#4A5568", anchor="mm")
@@ -250,7 +265,7 @@ def render_personal():
     cards_y2 = 865
 
     for x1, x2, border_color in [(c1_x1, c1_x2, (45, 119, 67)), (c2_x1, c2_x2, (38, 100, 158)), (c3_x1, c3_x2, (191, 50, 40))]:
-        draw.rounded_rectangle((x1, cards_y1, x2, cards_y2), 32, fill=(255, 255, 255), outline=border_color, width=4)
+        draw.rounded_rectangle((x1, cards_y1, x2, cards_y2), 32, fill=(255, 255, 255, 250), outline=border_color, width=4)
 
     # Headers
     draw.rounded_rectangle((c1_x1 + 6, cards_y1 + 6, c1_x2 - 6, cards_y1 + 82), 26, fill=(45, 119, 67))
@@ -284,7 +299,7 @@ def render_personal():
     draw_card_pill_p(c3_x1, c3_x2, 735, "お金と時間の自由", "貯金も節約も自然に成功！", (191, 50, 40), (252, 238, 235))
 
     # Bottom 5 Mindsets Card (y: 885 to 1115)
-    draw.rounded_rectangle((c1_x1, 885, c3_x2, 1115), 32, fill=(255, 255, 255), outline=(215, 139, 66), width=4)
+    draw.rounded_rectangle((c1_x1, 885, c3_x2, 1115), 32, fill=(255, 255, 255, 252), outline=(215, 139, 66), width=4)
     draw.rounded_rectangle((c1_x1 + 6, 891, c3_x2 - 6, 946), 22, fill=(215, 139, 66))
     draw_text_with_stroke(draw, (SIZE // 2, 918), "クローゼットの迷いを断ち切る「3秒で手放す5つの思考」", 24, "white", stroke_fill="#D78B42", stroke_width=0)
 
@@ -311,5 +326,6 @@ def render_personal():
     canvas.convert("RGB").save(target, format="PNG", quality=98)
     print("Personal masterpiece saved:", target)
 
-render_studio()
-render_personal()
+if __name__ == "__main__":
+    render_studio()
+    render_personal()

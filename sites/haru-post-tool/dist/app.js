@@ -129,7 +129,7 @@ function renderPost(data, allItems) {
       <div class="video-grid">
         ${videos.map((video) => `
           <div class="video-card">
-            <video controls playsinline preload="metadata" poster="${video.poster}">
+            <video controls playsinline muted preload="metadata" poster="${video.poster}">
               <source src="${video.src}" type="video/mp4" />
               このブラウザでは動画を再生できません。
             </video>
