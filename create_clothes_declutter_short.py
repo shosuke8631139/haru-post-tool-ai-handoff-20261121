@@ -5,6 +5,7 @@ import subprocess
 import wave
 
 ROOT = Path(__file__).resolve().parent
+BRAIN = Path(r"C:\Users\kurro\.gemini\antigravity\brain\37b73ff8-3d00-4627-bc53-b533c97e2644")
 W, H = 1080, 1920
 FONT_B = r"C:\Windows\Fonts\BIZ-UDGothicB.ttc"
 FONT_R = r"C:\Windows\Fonts\BIZ-UDGothicR.ttc"
@@ -24,43 +25,9 @@ def cover(image, size):
     return resized.crop((left, top, left + size[0], top + size[1]))
 
 
-def split_storyboard(source_path, scene_dir):
-    scene_dir.mkdir(parents=True, exist_ok=True)
-    source = Image.open(source_path).convert("RGB")
-    cell_w = source.width // 3
-    cell_h = source.height // 2
-    paths = []
-    for row in range(2):
-        for col in range(3):
-            index = row * 3 + col + 1
-            left = col * cell_w
-            top = row * cell_h
-            right = source.width if col == 2 else (col + 1) * cell_w
-            bottom = source.height if row == 1 else (row + 1) * cell_h
-            cell = source.crop((left, top, right, bottom))
-            inset = max(5, round(min(cell.size) * 0.012))
-            cell = cell.crop((inset, inset, cell.width - inset, cell.height - inset))
-            target = scene_dir / f"scene-{index:02}.png"
-            cell.save(target)
-            paths.append(target)
-    return paths
-
-
-def rounded_square(source, size=920, is_infographic=False):
-    if is_infographic:
-        source_sq = cover(source.convert("RGB"), (size, size))
-    else:
-        # Maintain aspect ratio so comic borders and text are never clipped
-        ratio = min(size / source.width, size / source.height)
-        new_w = round(source.width * ratio)
-        new_h = round(source.height * ratio)
-        resized = source.resize((new_w, new_h), Image.Resampling.LANCZOS)
-        bg = cover(source.convert("RGB"), (size, size)).filter(ImageFilter.GaussianBlur(24)).convert("RGBA")
-        dim = Image.new("RGBA", (size, size), (15, 25, 40, 75))
-        bg = Image.alpha_composite(bg, dim)
-        bg.paste(resized.convert("RGBA"), ((size - new_w) // 2, (size - new_h) // 2))
-        source_sq = bg.convert("RGB")
-
+def rounded_square(source, size=940):
+    # Full-bleed square card with rounded corners matching the reference slide design
+    source_sq = cover(source.convert("RGB"), (size, size))
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, size, size), 48, fill=255)
     layer = Image.new("RGBA", (size, size), (255, 255, 255, 0))
@@ -85,31 +52,35 @@ def center(draw, xy, value, size, fill, bold=True, spacing=10, stroke=0):
 def make_slide(slides_dir, index, source_path, kicker, title, caption, accent, footer_text, infographic=False):
     source = Image.open(source_path).convert("RGB")
     background = cover(source, (W, H)).filter(ImageFilter.GaussianBlur(34)).convert("RGBA")
-    veil = Image.new("RGBA", (W, H), (18, 35, 54, 148 if not infographic else 180))
+    veil = Image.new("RGBA", (W, H), (18, 35, 54, 150 if not infographic else 180))
     image = Image.alpha_composite(background, veil)
     draw = ImageDraw.Draw(image)
 
+    # Top tag (BOOK NOTE / PHASE etc.)
     draw.rounded_rectangle((70, 78, 370, 142), 32, fill=accent)
     center(draw, (220, 111), kicker, 29, "white")
-    title_size = 58 if len(title.replace("\n", "")) <= 18 else 48
+    title_size = 56 if len(title.replace("\n", "")) <= 18 else 46
     center(draw, (W // 2, 238), title, title_size, "white", True, 11, 2)
 
-    card_size = 940 if not infographic else 990
-    card_y = 350 if not infographic else 330
+    # Main Card
+    card_size = 940 if not infographic else 980
+    card_y = 345 if not infographic else 325
     shadow = Image.new("RGBA", (card_size + 50, card_size + 50), (0, 0, 0, 0))
     sd = ImageDraw.Draw(shadow)
-    sd.rounded_rectangle((25, 25, card_size + 25, card_size + 25), 58, fill=(0, 0, 0, 110))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(20))
+    sd.rounded_rectangle((25, 25, card_size + 25, card_size + 25), 58, fill=(0, 0, 0, 115))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(22))
     image.alpha_composite(shadow, ((W - shadow.width) // 2, card_y - 8))
-    image.alpha_composite(rounded_square(source, card_size, infographic), ((W - card_size) // 2, card_y))
+    image.alpha_composite(rounded_square(source, card_size), ((W - card_size) // 2, card_y))
 
+    # Caption panel
     draw = ImageDraw.Draw(image)
-    panel_y = card_y + card_size + 68
+    panel_y = card_y + card_size + 65
     draw.rounded_rectangle((70, panel_y, 1010, 1805), 46, fill=(255, 249, 239, 240))
     draw.rectangle((70, panel_y, 88, 1805), fill=accent)
     caption_size = 42 if len(caption.replace("\n", "")) < 52 else 35
     center(draw, (W // 2 + 8, (panel_y + 1805) // 2 - 4), caption, caption_size, NAVY, True, 18)
 
+    # Footer tag
     draw.rounded_rectangle((300, 1840, 780, 1886), 23, fill=(255, 255, 255, 48))
     center(draw, (540, 1863), footer_text, 21, "#F6E7C5")
     image.convert("RGB").save(slides_dir / f"slide-{index:02}.png", quality=95)
@@ -160,6 +131,8 @@ def build_video(work, slides_dir, audio_path, output_name):
         ],
         check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
     )
+    import shutil
+    shutil.copy2(output, ROOT / "outputs" / output_name)
     return output, total
 
 
@@ -174,7 +147,6 @@ def main():
 
     if args.variant == "personal":
         work = ROOT / "outputs" / "clothes_declutter_short"
-        storyboard = ROOT / "outputs" / "服捨て_個人用ストーリーボード.png"
         infographic = ROOT / "outputs" / "服捨て_個人アカウント用.png"
         output_name = "服捨て_ショート動画.mp4"
         accents = ["#C96C58", "#487C89", "#C7953B", "#477765", "#8C5383", "#C96C58", "#C96C58"]
@@ -188,9 +160,17 @@ def main():
             (5, "FREEDOM", "人生の主導権を取り戻す", "服を手放すことは自分を解き放つこと\n自分軸で軽やかに未来へ歩き出そう！", accents[5], False),
             (6, "SUMMARY", "服捨て メソッドまとめ", "服を捨てると、人生とお金が好転する\nまずは着ていない1着から手放そう！", accents[6], True),
         ]
+        image_sources = [
+            BRAIN / "clean_personal_scene_01.png",
+            BRAIN / "clean_personal_scene_02.png",
+            BRAIN / "clean_personal_scene_03.png",
+            BRAIN / "clean_personal_scene_04.png",
+            BRAIN / "clean_personal_scene_05.png",
+            BRAIN / "clean_personal_scene_06.png",
+            infographic,
+        ]
     else:
         work = ROOT / "outputs" / "clothes_declutter_studio_short"
-        storyboard = ROOT / "outputs" / "服捨て_スタジオ用ストーリーボード.png"
         infographic = ROOT / "outputs" / "服捨て_ダンススタジオ用.png"
         output_name = "服捨て_スタジオ版ショート動画.mp4"
         accents = ["#D45B72", "#2C818A", "#D78B42", "#2D8580", "#7D5AA6", "#D45B72", "#D45B72"]
@@ -204,15 +184,25 @@ def main():
             (5, "LIBERATION", "軽やかに自分らしく踊る！", "服を手放し人生の主導権を取り戻す\n心も体も軽く、最高のステージへ！", accents[5], False),
             (6, "SUMMARY", "服捨て メソッドまとめ", "服を捨てると、人生とお金が好転する\nまずは着ていない1着から手放そう！", accents[6], True),
         ]
+        # Slide 1 uses the authentic full-bleed masterpiece illustration (Haruka smiling with clover robot & cat in closet)
+        # Slide 2-6 use borderless clean scenes
+        # Slide 7 uses 6-habits infographic
+        image_sources = [
+            BRAIN / "haruka_fukusute_slide_illustration_1795311720688.jpg",
+            BRAIN / "clean_scene_02.png",
+            BRAIN / "clean_scene_03.png",
+            BRAIN / "clean_scene_04.png",
+            BRAIN / "clean_scene_05.png",
+            BRAIN / "clean_scene_06.png",
+            infographic,
+        ]
 
-    scenes = work / "backgrounds"
     slides_dir = work / "slides"
     work.mkdir(parents=True, exist_ok=True)
     slides_dir.mkdir(parents=True, exist_ok=True)
-    scene_paths = split_storyboard(storyboard, scenes)
 
     for index, (scene_idx, kicker, title, caption, accent, is_info) in enumerate(slide_specs, 1):
-        src = infographic if is_info else scene_paths[scene_idx]
+        src = image_sources[index - 1]
         make_slide(slides_dir, index, src, kicker, title, caption, accent, footer_text, is_info)
 
     output, duration = build_video(work, slides_dir, audio, output_name)
