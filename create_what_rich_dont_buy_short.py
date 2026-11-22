@@ -46,34 +46,50 @@ def center(draw, xy, value, size, fill, bold=True, spacing=10, stroke=0):
     )
 
 
-def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_text=None, tag_color=None):
+def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=None, tag_subtitle=None, tag_color=None):
     if crop_box is None:
         return cover(source_full, (size, size))
+
     cropped = source_full.crop(crop_box)
-    ratio = 910 / cropped.width
-    cw, ch = 910, round(cropped.height * ratio)
-    card_res = cropped.resize((cw, ch), Image.Resampling.LANCZOS)
+    bw, bh = cropped.size
+    ratio = 870.0 / bw
+    new_w, new_h = 870, round(bh * ratio)
+    banner_res = cropped.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
-    plate = Image.new("RGBA", (size, size), (255, 252, 246, 255))
-    shadow = Image.new("RGBA", (cw + 40, ch + 40), (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle((20, 20, cw + 20, ch + 20), 28, fill=(0, 0, 0, 80))
-    shadow = shadow.filter(ImageFilter.GaussianBlur(16))
+    plate = Image.new("RGBA", (size, size), (255, 255, 255, 255))
+    draw_p = ImageDraw.Draw(plate)
 
-    px = (size - cw) // 2
-    py = (size - ch) // 2
-    plate.alpha_composite(shadow, (px - 20, py - 12))
-    plate.paste(card_res, (px, py))
+    # Top header inside card
+    card_header_color = tag_color if tag_color else ((18, 35, 58) if not is_studio else (28, 124, 130))
+    draw_p.rounded_rectangle((35, 35, size - 35, 115), 18, fill=card_header_color)
+    draw_p.text((size // 2, 75), tag_title or "", font=font(30, True), fill="white", anchor="mm")
 
-    if tag_text and tag_color:
-        draw_p = ImageDraw.Draw(plate)
-        draw_p.rounded_rectangle((px, py - 60, px + 260, py - 16), 18, fill=tag_color)
-        draw_p.text((px + 130, py - 38), tag_text, font=font(20, True), fill="white", anchor="mm")
+    # Banner in middle
+    by = 145
+    plate.paste(banner_res, ((size - new_w) // 2, by))
+
+    # Takeaway box below
+    draw_p.rounded_rectangle(
+        (35, by + new_h + 25, size - 35, size - 35),
+        22,
+        fill=(245, 248, 252) if not is_studio else (244, 252, 250),
+        outline=(210, 225, 240) if not is_studio else (200, 235, 230),
+        width=2,
+    )
+    if tag_subtitle:
+        lines = tag_subtitle.split("\n")
+        title_sub = lines[0] if len(lines) > 0 else ""
+        body_sub = "\n".join(lines[1:]) if len(lines) > 1 else ""
+        draw_p.text((size // 2, by + new_h + 65), title_sub, font=font(26, True), fill="#B91C1C" if not is_studio else "#E76F51", anchor="mm")
+        if body_sub:
+            draw_p.text((size // 2, by + new_h + 125), body_sub, font=font(22, False), fill="#172334", anchor="mm", align="center", spacing=8)
+
     return plate
 
 
-def make_slide(slides_dir, index, source_full, kicker, title, caption, accent, footer_text, crop_box=None, is_info=False, is_studio=False, tag_text=None):
+def make_slide(slides_dir, index, source_full, kicker, title, caption, accent, footer_text, crop_box=None, is_studio=False, tag_title=None, tag_subtitle=None):
     card_size = 940
-    card_layer = make_card_layer(source_full, crop_box, card_size, is_studio=is_studio, tag_text=tag_text, tag_color=accent)
+    card_layer = make_card_layer(source_full, crop_box, card_size, is_studio=is_studio, tag_title=tag_title, tag_subtitle=tag_subtitle, tag_color=accent)
 
     bg = card_layer.resize((W, H), Image.Resampling.LANCZOS).filter(ImageFilter.GaussianBlur(40))
     veil = Image.new("RGBA", (W, H), (18, 30, 48, 175) if not is_studio else (32, 54, 76, 170))
@@ -129,7 +145,6 @@ def wav_duration(path):
 
 def build_video(work, slides_dir, audio_path, output_name):
     total = wav_duration(audio_path)
-    # 7 slides
     weights = [0.14, 0.14, 0.14, 0.14, 0.14, 0.14, 0.16]
     durations = [total * weight for weight in weights]
     segments = []
@@ -200,50 +215,58 @@ def main():
     if not audio.exists():
         asyncio.run(synthesize_narration(audio))
 
+    # Banner crop boxes from 1254x1254 infographic:
+    # 01: y=254..386, 02: y=396..528, 03: y=538..670, 04: y=680..812, 05: y=822..954, 06: y=964..1096
+    crop_01 = (28, 250, 1226, 390)
+    crop_02 = (28, 392, 1226, 532)
+    crop_03 = (28, 534, 1226, 674)
+    crop_05 = (28, 818, 1226, 958)
+    crop_06 = (28, 960, 1226, 1100)
+
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"
         infographic = OUT / "金持ちが絶対買わないもの_個人アカウント用.png"
-        master_scene = infographic
+        master_scene = BRAIN / "slide1_personal_master_official.png"
         output_name = "金持ちが絶対買わないもの_ショート動画.mp4"
         accents = ["#028C69", "#D28D2B", "#028C69", "#C94A4A", "#028C69", "#C94A4A", "#028C69"]
         footer_text = "HARUMICHI  BOOK NOTE"
         is_studio = False
 
         slide_specs = [
-            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "上位1%の養分にならない！\n生活防衛＆資産形成の決定版", accents[0], True),
-            (infographic, (35, 470, 495, 570), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
-            (infographic, (35, 580, 495, 680), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
-            (infographic, (35, 690, 495, 790), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
-            (infographic, (505, 430, 965, 535), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
-            (infographic, (505, 540, 965, 648), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
-            (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], True),
+            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "上位1%の養分にならない！\n生活防衛＆資産形成の決定版", accents[0], None, None),
+            (infographic, crop_01, "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], "RULE 01 : 葬儀・墓地の真実", "【世間体や同調圧力を排除する】\n多額の費用をかけること＝供養ではない。\n事前の冷静な家族葬プランで、生活基盤を守るのが賢明な選択。"),
+            (infographic, crop_02, "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], "RULE 02 : マイホームの罠", "【新築ブランド料・広告費を回避】\n住んだ瞬間に資産価値は2割〜3割下落。\n価値が落ちにくい中古物件か、柔軟な賃貸が富裕層の鉄則。"),
+            (infographic, crop_03, "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], "RULE 03 : 不安ビジネスの正体", "【不安解消をお金で買おうとしない】\n数十万円の教材を買っても稼げない。\n千円台の良書と本業の実務経験こそ最大の自己投資。"),
+            (infographic, crop_05, "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], "RULE 05 : 民間保険の見直し", "【日本の公的保険は世界最高水準】\n高額療養費制度で月々の負担上限は明確。\n不要な特約を解約し、浮いたお金を投資へ回す。"),
+            (infographic, crop_06, "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], "RULE 06 : 最悪の搾取ギャンブル", "【期待値マイナスに1円も払わない】\n宝くじの還元率はわずか46%。胴元が半分搾取。\n新NISAで資本主義の成長に複利で乗るのが賢者の選択。"),
+            (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], None, None),
         ]
     else:
         work = OUT / "what_rich_dont_buy_studio_short"
         infographic = OUT / "金持ちが絶対買わないもの_ダンススタジオ用.png"
-        master_scene = BRAIN / "slide1_rooftop_dance_jump_1795389403154.jpg"
+        master_scene = BRAIN / "slide1_studio_master_official.png"
         output_name = "金持ちが絶対買わないもの_スタジオ版ショート動画.mp4"
         accents = ["#E07A5F", "#2A9D8F", "#E76F51", "#264653", "#2A9D8F", "#E76F51", "#2A9D8F"]
         footer_text = "HARUKA CLOVER STUDIO"
         is_studio = True
 
         slide_specs = [
-            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "身軽さこそ最強のパフォーマンス！\n生活防衛＆資産形成の決定版", accents[0], False),
-            (infographic, (15, 390, 485, 530), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
-            (infographic, (15, 540, 485, 680), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
-            (infographic, (15, 690, 485, 830), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
-            (infographic, (505, 540, 975, 680), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
-            (infographic, (505, 690, 975, 830), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
-            (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], True),
+            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "身軽さこそ最強のパフォーマンス！\n生活防衛＆資産形成の決定版", accents[0], None, None),
+            (infographic, crop_01, "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], "RULE 01 : セレモニーの見栄を手放す", "【見栄より心の繋がりを大切に】\n周囲の目に合わせた過剰な出費はストップ。\n心から温かく偲ぶ家族葬で十分気持ちは伝わる。"),
+            (infographic, crop_02, "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], "RULE 02 : 身軽で自由な住まい選び", "【重いローンで身動きを止めない】\nライフステージに合わせて自由に動ける\n中古リノベや賃貸で、身軽な暮らしをキープ！"),
+            (infographic, crop_03, "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], "RULE 03 : 不安を煽る教材にサヨナラ", "【買うだけ満足を脱出して実践へ】\n高額教材に頼るより、良書1冊とスタジオでの実践！\n現場で汗を流してアウトプットすることが最大の成長。"),
+            (infographic, crop_05, "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], "RULE 05 : 不安任せの保険を見直す", "【公的保険＋ダンスで健康な身体へ】\n不安で入った高額特約はカット。\n浮いたお金は自分磨きと未来の自己投資へ！"),
+            (infographic, crop_06, "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], "RULE 06 : 一攫千金の幻想を手放す", "【確実な自己投資と新NISAへ】\n半分搾取されるギャンブルは卒業！\n新NISAとスキルアップで自分の価値を最大化！"),
+            (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], None, None),
         ]
 
     slides_dir = work / "slides"
     work.mkdir(parents=True, exist_ok=True)
     slides_dir.mkdir(parents=True, exist_ok=True)
 
-    for index, (src, crop_box, kicker, title, caption, accent, is_info) in enumerate(slide_specs, 1):
+    for index, (src, crop_box, kicker, title, caption, accent, tag_title, tag_subtitle) in enumerate(slide_specs, 1):
         source_image = Image.open(src).convert("RGBA")
-        make_slide(slides_dir, index, source_image, kicker, title, caption, accent, footer_text, crop_box, is_info, is_studio)
+        make_slide(slides_dir, index, source_image, kicker, title, caption, accent, footer_text, crop_box, is_studio, tag_title, tag_subtitle)
 
     output, duration = build_video(work, slides_dir, audio, output_name)
     print(f"Generated: {output}")
