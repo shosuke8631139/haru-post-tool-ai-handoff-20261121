@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "100m-yen-savings",
+        "file": "1億円貯める方法_投稿セット.md",
+        "title": "橘玲・大橋弘祐『難しいことはわかりませんが、1億円貯める方法を教えてください！』",
+        "sourceTitle": "参考動画：『難しいことはわかりませんが、1億円貯める方法を教えてください！』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=BKDca2K6rvo",
+        "updatedAt": "2026年11月22日",
+        "personal": "1億円貯める方法_個人アカウント用.png",
+        "studio": "1億円貯める方法_ダンススタジオ用.png",
+        "video": "100m_yen_short/1億円貯める方法_ショート動画.mp4",
+        "poster": "100m_yen_short/slides/slide-01.png",
+        "videoLabel": "『1億円貯める方法』個人版57秒ショート",
+        "videoDuration": "57秒",
+        "studioVideo": "100m_yen_studio_short/1億円貯める方法_スタジオ版ショート動画.mp4",
+        "studioPoster": "100m_yen_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『1億円貯める方法』スタジオ版57秒ショート",
+    },
+    {
         "id": "clothes-declutter",
         "file": "服捨て_投稿セット.md",
         "title": "昼田祥子『服捨て 自分を解き放つメソッド』",
