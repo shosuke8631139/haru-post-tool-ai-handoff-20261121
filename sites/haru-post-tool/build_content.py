@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "what-rich-dont-buy",
+        "file": "金持ちが絶対買わないもの_投稿セット.md",
+        "title": "本要約チャンネル『金持ちが絶対買わないもの・上位1%の養分にならない6つのルール』",
+        "sourceTitle": "参考動画：『金持ちが絶対買わないものを暴露します。上位1%の投資家の養分になりたくなければ、この6つだけは絶対に買うな！！』本要約",
+        "sourceUrl": "https://www.youtube.com/watch?v=il1-ti8GlEY",
+        "updatedAt": "2026年11月23日",
+        "personal": "金持ちが絶対買わないもの_個人アカウント用.png",
+        "studio": "金持ちが絶対買わないもの_ダンススタジオ用.png",
+        "video": "what_rich_dont_buy_short/金持ちが絶対買わないもの_ショート動画.mp4",
+        "poster": "what_rich_dont_buy_short/slides/slide-01.png",
+        "videoLabel": "『金持ちが絶対買わないもの』個人版55秒ショート",
+        "videoDuration": "55秒",
+        "studioVideo": "what_rich_dont_buy_studio_short/金持ちが絶対買わないもの_スタジオ版ショート動画.mp4",
+        "studioPoster": "what_rich_dont_buy_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『金持ちが絶対買わないもの』スタジオ版55秒ショート",
+    },
+    {
         "id": "100m-yen-savings",
         "file": "1億円貯める方法_投稿セット.md",
         "title": "橘玲・大橋弘祐『難しいことはわかりませんが、1億円貯める方法を教えてください！』",
