@@ -46,12 +46,25 @@ def split_storyboard(source_path, scene_dir):
     return paths
 
 
-def rounded_square(source, size=920):
-    source = cover(source.convert("RGB"), (size, size))
+def rounded_square(source, size=920, is_infographic=False):
+    if is_infographic:
+        source_sq = cover(source.convert("RGB"), (size, size))
+    else:
+        # Maintain aspect ratio so comic borders and text are never clipped
+        ratio = min(size / source.width, size / source.height)
+        new_w = round(source.width * ratio)
+        new_h = round(source.height * ratio)
+        resized = source.resize((new_w, new_h), Image.Resampling.LANCZOS)
+        bg = cover(source.convert("RGB"), (size, size)).filter(ImageFilter.GaussianBlur(24)).convert("RGBA")
+        dim = Image.new("RGBA", (size, size), (15, 25, 40, 75))
+        bg = Image.alpha_composite(bg, dim)
+        bg.paste(resized.convert("RGBA"), ((size - new_w) // 2, (size - new_h) // 2))
+        source_sq = bg.convert("RGB")
+
     mask = Image.new("L", (size, size), 0)
     ImageDraw.Draw(mask).rounded_rectangle((0, 0, size, size), 48, fill=255)
     layer = Image.new("RGBA", (size, size), (255, 255, 255, 0))
-    layer.paste(source.convert("RGBA"), (0, 0), mask)
+    layer.paste(source_sq.convert("RGBA"), (0, 0), mask)
     return layer
 
 
@@ -88,7 +101,7 @@ def make_slide(slides_dir, index, source_path, kicker, title, caption, accent, f
     sd.rounded_rectangle((25, 25, card_size + 25, card_size + 25), 58, fill=(0, 0, 0, 110))
     shadow = shadow.filter(ImageFilter.GaussianBlur(20))
     image.alpha_composite(shadow, ((W - shadow.width) // 2, card_y - 8))
-    image.alpha_composite(rounded_square(source, card_size), ((W - card_size) // 2, card_y))
+    image.alpha_composite(rounded_square(source, card_size, infographic), ((W - card_size) // 2, card_y))
 
     draw = ImageDraw.Draw(image)
     panel_y = card_y + card_size + 68
@@ -185,7 +198,7 @@ def main():
         slide_specs = [
             (0, "BOOK NOTE", "服捨てで自分を解き放つ！", "着る服がない悩みの正体とは？\nクローゼットの他人軸を追い出そう", accents[0], False),
             (1, "PHASE 1", "簡単な物から即手放す", "シューズや古着からすっきり排出！\n水槽の濁りを抜いて視界クリアに", accents[1], False),
-            (2, "PHASE 2", "買いながら新陳代謝！", "モヤモヤ期は自分軸への蛹の期間\n動いて踊れる最高の一着を探そう", accents[2], False),
+            (2, "PHASE 2", "買いながら新陳代謝！", "モヤモヤ期は自分軸への大切なステップ\n動いて踊れる最高の一着を探そう", accents[2], False),
             (3, "MINDSET", "3秒で手放す5つの執着", "高かった衣装やいつかの服も手放す\n内側の輝きは服を減らしても奪われない", accents[3], False),
             (4, "PHASE 3", "心地よい静寂期へ", "お気に入りの定番スタイルで\n朝の迷いと無駄な出費が劇的ゼロ！", accents[4], False),
             (5, "LIBERATION", "軽やかに自分らしく踊る！", "服を手放し人生の主導権を取り戻す\n心も体も軽く、最高のステージへ！", accents[5], False),
