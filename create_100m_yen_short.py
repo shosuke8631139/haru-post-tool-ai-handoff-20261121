@@ -188,7 +188,7 @@ def main():
     if args.variant == "personal":
         work = ROOT / "outputs" / "100m_yen_short"
         infographic = ROOT / "outputs" / "1億円貯める方法_個人アカウント用.png"
-        master_scene = BRAIN / "comical_chibi_master_illustration_1795339907352.jpg"
+        master_scene = BRAIN / "haru_sakurajimao_room_master_v2_1795341663097.jpg"
         output_name = "1億円貯める方法_ショート動画.mp4"
         accents = ["#C96C58", "#487C89", "#C7953B", "#477765", "#8C5383", "#2C818A", "#C96C58"]
         footer_text = "HARUMICHI  BOOK NOTE"
