@@ -203,37 +203,37 @@ def main():
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"
         infographic = OUT / "金持ちが絶対買わないもの_個人アカウント用.png"
-        master_scene = BRAIN / "rich_never_buy_slide1_title_v2_1795388175470.jpg"
+        master_scene = infographic
         output_name = "金持ちが絶対買わないもの_ショート動画.mp4"
-        accents = ["#C94A4A", "#2E7D62", "#C28527", "#3B6EA5", "#7A4D8B", "#2C818A", "#C94A4A"]
+        accents = ["#028C69", "#D28D2B", "#028C69", "#C94A4A", "#028C69", "#C94A4A", "#028C69"]
         footer_text = "HARUMICHI  BOOK NOTE"
         is_studio = False
 
         slide_specs = [
-            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "上位1%の養分にならない！\n生活防衛＆資産形成の決定版", accents[0], False),
-            (infographic, (20, 345, 340, 580), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
-            (infographic, (340, 345, 660, 580), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
-            (infographic, (660, 345, 1000, 580), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
-            (infographic, (340, 585, 660, 815), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
-            (infographic, (660, 585, 1000, 815), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
+            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "上位1%の養分にならない！\n生活防衛＆資産形成の決定版", accents[0], True),
+            (infographic, (35, 470, 495, 570), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
+            (infographic, (35, 580, 495, 680), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
+            (infographic, (35, 690, 495, 790), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
+            (infographic, (505, 430, 965, 535), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
+            (infographic, (505, 540, 965, 648), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
             (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], True),
         ]
     else:
         work = OUT / "what_rich_dont_buy_studio_short"
         infographic = OUT / "金持ちが絶対買わないもの_ダンススタジオ用.png"
-        master_scene = BRAIN / "slide1_dance_studio_title_illustration_v2_1795388131838.jpg"
+        master_scene = BRAIN / "slide1_rooftop_dance_jump_1795389403154.jpg"
         output_name = "金持ちが絶対買わないもの_スタジオ版ショート動画.mp4"
-        accents = ["#E07A5F", "#2D8580", "#D78B42", "#4A6FA5", "#8E5572", "#2C818A", "#E07A5F"]
+        accents = ["#E07A5F", "#2A9D8F", "#E76F51", "#264653", "#2A9D8F", "#E76F51", "#2A9D8F"]
         footer_text = "HARUKA CLOVER STUDIO"
         is_studio = True
 
         slide_specs = [
-            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "上位1%の養分にならない！\n生活防衛＆資産形成の決定版", accents[0], False),
-            (infographic, (10, 350, 500, 500), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
-            (infographic, (505, 350, 995, 500), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
-            (infographic, (10, 510, 500, 655), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
-            (infographic, (10, 660, 500, 810), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
-            (infographic, (505, 660, 995, 810), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
+            (master_scene, None, "BOOK NOTE", "金持ちが買わない黄金ルール", "身軽さこそ最強のパフォーマンス！\n生活防衛＆資産形成の決定版", accents[0], False),
+            (infographic, (15, 390, 485, 530), "RULE 01", "立派すぎる葬儀を回避！", "世間体や同調バイアスを排除！\nシンプルな家族葬で十分", accents[1], False),
+            (infographic, (15, 540, 485, 680), "RULE 02", "大手新築戸建はNG！", "住んだ瞬間に価値2割下落！\nブランド料と35年ローンを回避", accents[2], False),
+            (infographic, (15, 690, 485, 830), "RULE 03", "高額情報教材に手を出すな", "将来の不安につけ込む商材NG！\n千円の良書と本業の実務で磨け", accents[3], False),
+            (infographic, (505, 540, 975, 680), "RULE 05", "高額な民間保険を即解約！", "日本には高額療養費制度がある！\n無駄な特約を削り資金確保", accents[4], False),
+            (infographic, (505, 690, 975, 830), "RULE 06", "愚か者の税金・宝くじ", "還元率46%の超搾取ギャンブル！\n期待値マイナスには1円も払わない", accents[5], False),
             (infographic, None, "SUMMARY", "買わない決断こそ最強の投資！", "富裕層との差は意思決定の質！\n新NISAで資本を働かせ自由を掴め", accents[6], True),
         ]
 
