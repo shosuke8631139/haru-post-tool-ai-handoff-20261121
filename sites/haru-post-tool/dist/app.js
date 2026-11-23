@@ -1,3 +1,4 @@
+function withCb(url) { return url ? `${url}?v=20261123clean` : url; }
 const app = document.querySelector('#app');
 const toast = document.querySelector('#toast');
 
@@ -129,8 +130,8 @@ function renderPost(data, allItems) {
       <div class="video-grid">
         ${videos.map((video) => `
           <div class="video-card">
-            <video controls playsinline muted preload="metadata" poster="${video.poster}">
-              <source src="${video.src}" type="video/mp4" />
+            <video controls playsinline muted preload="metadata" poster="${withCb(video.poster)}">
+              <source src="${withCb(video.src)}" type="video/mp4" />
               このブラウザでは動画を再生できません。
             </video>
             <div class="video-card__body">
@@ -169,7 +170,7 @@ function renderPost(data, allItems) {
       <div class="image-grid">
         ${data.images.map((image) => `
           <article class="image-card">
-            <img src="${image.src}" alt="${escapeHtml(image.label)}" loading="lazy" />
+            <img src="${withCb(image.src)}" alt="${escapeHtml(image.label)}" loading="lazy" />
             <div class="image-card__body">
               <h4>${escapeHtml(image.label)}</h4>
               <div class="media-actions">
@@ -218,7 +219,7 @@ function renderPost(data, allItems) {
 }
 
 async function init() {
-  const response = await fetch('content.json?v=17', { cache: 'no-store' });
+  const response = await fetch('content.json?v=20261123clean', { cache: 'no-store' });
   if (!response.ok) throw new Error('content.json could not be loaded');
   const data = await response.json();
   const items = data.items || [data];
