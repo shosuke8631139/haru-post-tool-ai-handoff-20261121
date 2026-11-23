@@ -195,7 +195,7 @@ def main():
 
     audio = OUT / "what_rich_dont_buy_narration.wav"
 
-    # Precise Card crops from the clean 1254x1254 handcrafted infographic:
+    # Card crops from clean 1254x1254 handcrafted infographic:
     crop_01 = (46, 346, 424, 584)
     crop_02 = (438, 346, 816, 584)
     crop_03 = (830, 346, 1208, 584)
@@ -205,7 +205,8 @@ def main():
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"
         infographic = OUT / "金持ちが絶対買わないもの_個人アカウント用.png"
-        master_scene = BRAIN / "slide1_personal_master_official.png"
+        # BRAND NEW MASTER SCENE: Freedom observation deck overlooking Sakurajima & blue ocean
+        master_scene = BRAIN / "slide1_freedom_deck_cinematic_1795425593730.jpg"
         output_name = "金持ちが絶対買わないもの_ショート動画.mp4"
         accents = ["#028C69", "#D28D2B", "#028C69", "#C94A4A", "#028C69", "#C94A4A", "#028C69"]
         footer_text = "HARUMICHI  BOOK NOTE"
@@ -223,7 +224,8 @@ def main():
     else:
         work = OUT / "what_rich_dont_buy_studio_short"
         infographic = OUT / "金持ちが絶対買わないもの_ダンススタジオ用.png"
-        master_scene = BRAIN / "slide1_studio_master_official.png"
+        # BRAND NEW MASTER SCENE: Dynamic rooftop freedom stage with Haruka, Robot & Cat
+        master_scene = BRAIN / "haruka_rooftop_freedom_slide1_1795425575810.jpg"
         output_name = "金持ちが絶対買わないもの_スタジオ版ショート動画.mp4"
         accents = ["#E07A5F", "#2A9D8F", "#E76F51", "#264653", "#2A9D8F", "#E76F51", "#2A9D8F"]
         footer_text = "HARUKA CLOVER STUDIO"

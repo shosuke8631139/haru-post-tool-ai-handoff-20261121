@@ -1,4 +1,4 @@
-function withCb(url) { return url ? `${url}?v=20261123clean` : url; }
+function withCb(url) { return url ? `${url}?v=20261123masterpiece` : url; }
 const app = document.querySelector('#app');
 const toast = document.querySelector('#toast');
 
