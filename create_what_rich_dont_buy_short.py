@@ -66,7 +66,7 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
 
     # Shadow around card
     shadow = Image.new("RGBA", (new_w + 30, new_h + 30), (0, 0, 0, 0))
-    ImageDraw.Draw(shadow).rounded_rectangle((10, 10, new_w + 20, new_h + 20), 24, fill=(0, 0, 0, 55))
+    ImageDraw.Draw(shadow).rounded_rectangle((10, 10, new_w + 20, new_h + 20), 24, fill=(0, 0, 0, 50))
     shadow = shadow.filter(ImageFilter.GaussianBlur(12))
 
     cx = (size - new_w) // 2
@@ -195,12 +195,12 @@ def main():
 
     audio = OUT / "what_rich_dont_buy_narration.wav"
 
-    # Card crops from 1254x1254 handcrafted infographic:
-    crop_01 = (55, 350, 430, 580)
-    crop_02 = (440, 350, 815, 580)
-    crop_03 = (825, 350, 1200, 580)
-    crop_05 = (440, 575, 815, 805)
-    crop_06 = (825, 575, 1200, 805)
+    # Precise Card crops from the clean 1254x1254 handcrafted infographic:
+    crop_01 = (46, 346, 424, 584)
+    crop_02 = (438, 346, 816, 584)
+    crop_03 = (830, 346, 1208, 584)
+    crop_05 = (438, 591, 816, 829)
+    crop_06 = (830, 591, 1208, 829)
 
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"
