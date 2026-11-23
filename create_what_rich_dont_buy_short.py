@@ -52,7 +52,9 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
 
     cropped = source_full.crop(crop_box)
     cw, ch = cropped.size
-    scale = 1.78
+    max_h = 510
+    max_w = size - 120
+    scale = min(max_w / cw, max_h / ch)
     new_w, new_h = round(cw * scale), round(ch * scale)
     card_res = cropped.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
@@ -61,8 +63,8 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
 
     # Top header inside card
     card_header_color = tag_color if tag_color else ((18, 35, 58) if not is_studio else (28, 124, 130))
-    draw_p.rounded_rectangle((35, 30, size - 35, 110), 18, fill=card_header_color)
-    draw_p.text((size // 2, 70), tag_title or "", font=font(30, True), fill="white", anchor="mm")
+    draw_p.rounded_rectangle((35, 25, size - 35, 100), 18, fill=card_header_color)
+    draw_p.text((size // 2, 62), tag_title or "", font=font(30, True), fill="white", anchor="mm")
 
     # Shadow around card
     shadow = Image.new("RGBA", (new_w + 30, new_h + 30), (0, 0, 0, 0))
@@ -70,13 +72,13 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
     shadow = shadow.filter(ImageFilter.GaussianBlur(12))
 
     cx = (size - new_w) // 2
-    cy = 138
+    cy = 120
     plate.alpha_composite(shadow, (cx - 5, cy - 5))
     plate.paste(card_res, (cx, cy))
 
     # Takeaway box below
     draw_p.rounded_rectangle(
-        (35, cy + new_h + 25, size - 35, size - 25),
+        (35, cy + new_h + 20, size - 35, size - 25),
         22,
         fill=(245, 248, 252) if not is_studio else (244, 252, 250),
         outline=(210, 225, 240) if not is_studio else (200, 235, 230),
@@ -86,9 +88,10 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
         lines = tag_subtitle.split("\n")
         title_sub = lines[0] if len(lines) > 0 else ""
         body_sub = "\n".join(lines[1:]) if len(lines) > 1 else ""
-        draw_p.text((size // 2, cy + new_h + 65), title_sub, font=font(26, True), fill="#C92A2A" if not is_studio else "#E76F51", anchor="mm")
+        takeaway_center_y = cy + new_h + 20 + (size - 25 - (cy + new_h + 20)) // 2
+        draw_p.text((size // 2, cy + new_h + 55), title_sub, font=font(25, True), fill="#C92A2A" if not is_studio else "#E76F51", anchor="mm")
         if body_sub:
-            draw_p.text((size // 2, cy + new_h + 125), body_sub, font=font(22, False), fill="#172334", anchor="mm", align="center", spacing=8)
+            draw_p.text((size // 2, takeaway_center_y + 20), body_sub, font=font(21, False), fill="#172334", anchor="mm", align="center", spacing=6)
 
     return plate
 
@@ -195,12 +198,12 @@ def main():
 
     audio = OUT / "what_rich_dont_buy_narration.wav"
 
-    # Card crops from clean 1254x1254 handcrafted infographic:
-    crop_01 = (46, 346, 424, 584)
-    crop_02 = (438, 346, 816, 584)
-    crop_03 = (830, 346, 1208, 584)
-    crop_05 = (438, 591, 816, 829)
-    crop_06 = (830, 591, 1208, 829)
+    # Precise card crops from 1254x1254 masterpiece infographic:
+    crop_01 = (20, 346, 420, 742)
+    crop_02 = (426, 346, 826, 742)
+    crop_03 = (832, 346, 1232, 742)
+    crop_05 = (426, 742, 826, 1024)
+    crop_06 = (832, 742, 1232, 1024)
 
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"

@@ -25,68 +25,69 @@ def draw_stroked_text(
     )
 
 
-CARDS_CONFIG = [
-    {
-        "num": "01",
-        "title": "立派すぎる葬儀",
-        "badge_color": (201, 42, 42),
-        "sub": "世間体や見栄を排除！",
-        "sub_bg": (255, 235, 235),
-        "sub_fg": "#C92A2A",
-        "body": "・過剰な祭壇・生前墓地はNG\n・シンプルな家族葬で十分\n・事前相談で適正プラン決定",
-        "icon": ROOT / "icon_rule_1.png",
-    },
-    {
-        "num": "02",
-        "title": "大手新築一戸建て",
-        "badge_color": (43, 138, 62),
-        "sub": "買った瞬間に2割下落！",
-        "sub_bg": (235, 251, 238),
-        "sub_fg": "#2B8A3E",
-        "body": "・莫大なCM費・ブランド料回避\n・35年ローン地獄を抜け出す\n・価値の落ちない中古や賃貸",
-        "icon": ROOT / "icon_rule_2.png",
-    },
-    {
-        "num": "03",
-        "title": "高額情報教材",
-        "badge_color": (25, 113, 194),
-        "sub": "不安につけ込む商材NG！",
-        "sub_bg": (231, 245, 255),
-        "sub_fg": "#1971C2",
-        "body": "・高額教材を買っても稼げない\n・不安の解消はお金で買えない\n・千円の良書と本業の実務",
-        "icon": ROOT / "icon_rule_3.png",
-    },
-    {
-        "num": "04",
-        "title": "孤独を埋める消費",
-        "badge_color": (134, 46, 156),
-        "sub": "夜の街・過剰課金をゼロに",
-        "sub_bg": (243, 217, 250),
-        "sub_fg": "#862E9C",
-        "body": "・他人の承認はお金で買えない\n・買った関係は虚無しか残らない\n・本当の仲間と豊かな時間",
-        "icon": ROOT / "icon_rule_4.png",
-    },
-    {
-        "num": "05",
-        "title": "不要な民間保険",
-        "badge_color": (217, 72, 15),
-        "sub": "不安任せの特約は即解約！",
-        "sub_bg": (255, 232, 204),
-        "sub_fg": "#D9480F",
-        "body": "・高額療養費制度があるから安心\n・自己負担上限を理解して防衛\n・浮いた固定費を投資へ回す",
-        "icon": ROOT / "icon_rule_5.png",
-    },
-    {
-        "num": "06",
-        "title": "搾取宝くじ",
-        "badge_color": (194, 37, 92),
-        "sub": "還元率46%の愚か者の税金",
-        "sub_bg": (255, 222, 235),
-        "sub_fg": "#C2255C",
-        "body": "・胴元が半分抜く超搾取ゲーム\n・期待値マイナスに1円も出さない\n・新NISAでインデックス投資",
-        "icon": ROOT / "icon_rule_6.png",
-    },
-]
+def get_cards_config(is_studio=False):
+    return [
+        {
+            "num": "01",
+            "title": "立派すぎる葬儀",
+            "badge_color": (201, 42, 42),
+            "sub": "世間体や見栄を排除！",
+            "sub_bg": (255, 235, 235),
+            "sub_fg": "#C92A2A",
+            "body": "・過剰な祭壇・生前墓地はNG\n・シンプルな家族葬で十分\n・事前相談で適正プラン決定",
+            "icon": ROOT / ("icon_rule_1_studio.png" if is_studio else "icon_rule_1_personal.png"),
+        },
+        {
+            "num": "02",
+            "title": "大手新築一戸建て",
+            "badge_color": (43, 138, 62),
+            "sub": "買った瞬間に2割下落！",
+            "sub_bg": (235, 251, 238),
+            "sub_fg": "#2B8A3E",
+            "body": "・莫大なCM費・ブランド料回避\n・35年ローン地獄を抜け出す\n・価値の落ちない中古や賃貸",
+            "icon": ROOT / "icon_rule_2.png",
+        },
+        {
+            "num": "03",
+            "title": "高額情報教材",
+            "badge_color": (25, 113, 194),
+            "sub": "不安につけ込む商材NG！",
+            "sub_bg": (231, 245, 255),
+            "sub_fg": "#1971C2",
+            "body": "・高額教材を買っても稼げない\n・不安の解消はお金で買えない\n・千円の良書と本業の実務",
+            "icon": ROOT / "icon_rule_3.png",
+        },
+        {
+            "num": "04",
+            "title": "孤独を埋める消費",
+            "badge_color": (134, 46, 156),
+            "sub": "夜の街・過剰課金をゼロに",
+            "sub_bg": (243, 217, 250),
+            "sub_fg": "#862E9C",
+            "body": "・他人の承認はお金で買えない\n・買った関係は虚無しか残らない\n・本当の仲間と豊かな時間",
+            "icon": ROOT / ("icon_rule_4_studio.png" if is_studio else "icon_rule_4_personal.png"),
+        },
+        {
+            "num": "05",
+            "title": "不要な民間保険",
+            "badge_color": (217, 72, 15),
+            "sub": "不安任せの特約は即解約！",
+            "sub_bg": (255, 232, 204),
+            "sub_fg": "#D9480F",
+            "body": "・高額療養費制度があるから安心\n・自己負担上限を理解して防衛\n・浮いた固定費を投資へ回す",
+            "icon": ROOT / "icon_rule_5.png",
+        },
+        {
+            "num": "06",
+            "title": "搾取宝くじ",
+            "badge_color": (194, 37, 92),
+            "sub": "還元率46%の愚か者の税金",
+            "sub_bg": (255, 222, 235),
+            "sub_fg": "#C2255C",
+            "body": "・胴元が半分抜く超搾取ゲーム\n・期待値マイナスに1円も出さない\n・新NISAでインデックス投資",
+            "icon": ROOT / "icon_rule_6.png",
+        },
+    ]
 
 
 def render_infographic(is_studio=False):
@@ -151,7 +152,7 @@ def render_infographic(is_studio=False):
     f_sub = get_font(17, bold=True)
     f_body = get_font(16, bold=True)
 
-    for i, cfg in enumerate(CARDS_CONFIG):
+    for i, cfg in enumerate(get_cards_config(is_studio)):
         row = i // 3
         col = i % 3
         x1, x2 = col_bounds[col]
@@ -198,9 +199,10 @@ def render_infographic(is_studio=False):
 
             if cfg["icon"].exists():
                 icon = Image.open(cfg["icon"]).convert("RGBA")
-                ratio = min(180 / icon.width, 160 / icon.height)
+                max_w = 195 if cfg["num"] == "04" else 180
+                ratio = min(max_w / icon.width, 160 / icon.height)
                 icon_res = icon.resize((round(icon.width * ratio), round(icon.height * ratio)), Image.Resampling.LANCZOS)
-                ix = w - icon_res.width - 8
+                ix = w - icon_res.width - 6
                 iy = h - icon_res.height - 12
                 patch.alpha_composite(icon_res, (ix, iy))
 

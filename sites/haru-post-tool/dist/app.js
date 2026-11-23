@@ -1,4 +1,4 @@
-function withCb(url) { return url ? `${url}?v=20261123masterpiece` : url; }
+function withCb(url) { return url ? `${url}?v=20261123v2` : url; }
 const app = document.querySelector('#app');
 const toast = document.querySelector('#toast');
 
@@ -219,7 +219,7 @@ function renderPost(data, allItems) {
 }
 
 async function init() {
-  const response = await fetch('content.json?v=20261123clean', { cache: 'no-store' });
+  const response = await fetch('content.json?v=20261123v2', { cache: 'no-store' });
   if (!response.ok) throw new Error('content.json could not be loaded');
   const data = await response.json();
   const items = data.items || [data];

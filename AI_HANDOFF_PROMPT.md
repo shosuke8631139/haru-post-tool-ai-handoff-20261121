@@ -59,20 +59,21 @@
 - インフォグラフィック生成スクリプト: `render_masterpiece_what_rich_dont_buy.py`
 - ショート動画生成スクリプト: `create_what_rich_dont_buy_short.py`
 - サイトビルドスクリプト: `sites/haru-post-tool/build_content.py`
-- 公式キャラクター素材:
-  - `char_harumichi.png`
-  - `char_sakurajimao.png`
-  - `char_haruka.png`
-  - `char_robot.png`
-  - `char_cat.png`
-  - `haruka_trio_official.png`
+- 公式キャラクターアイコン素材（モブ人間ゼロ・完全演技カット）:
+  - `icon_rule_1_personal.png`（豪華祭壇❌＆静かに手を合わせる可愛いさくらじまお）
+  - `icon_rule_4_personal.png`（夜のカクテル❌＆温かい湯呑みでほっこりお茶を飲むさくらじまお）
+  - `icon_rule_1_studio.png`（豪華祭壇❌＆静かに手を合わせる可愛いハルちゃん＆鈴猫）
+  - `icon_rule_4_studio.png`（夜のカクテル❌＆マグカップで楽しくお茶を飲むハルちゃん・花ロボ・鈴猫）
+  - `icon_rule_2.png`（大手新築戸建❌＆身軽な住まい）
+  - `icon_rule_3.png`（高額教材スマホ❌＆良書とPC）
+  - `icon_rule_5.png`（民間保険証書ハサミ✂️＆盾と金貨）
+  - `icon_rule_6.png`（搾取宝くじ❌＆新NISA金貨瓶と上昇チャート）
 
 ---
 
-## 🚀 次のセッションで最初にやること
-1. カード01（家族シルエット）とカード04（一般女性）を、**公式キャラクター（さくらじまお／ハルちゃん＆花ロボ＆鈴猫）が可愛く演技するカット**へ差し替える。
-2. インフォグラフィックの羊皮紙テクスチャと手描き感をさらにブラッシュアップする。
-3. `python render_masterpiece_what_rich_dont_buy.py` を実行。
-4. `python create_what_rich_dont_buy_short.py personal` および `studio` を実行。
-5. `python sites\haru-post-tool\build_content.py` を実行。
-6. `git add .` -> `git commit` -> `git push origin main` でデプロイし、ブラウザで確認する。
+## 🚀 完了した作業と最新状況
+1. カード01およびカード04に入り込んでいた見知らぬモブ人間（家族シルエット・一般女性）を完全排除。
+2. 個人アカウント版（さくらじまお）およびダンススタジオ版（ハルちゃん・花ロボ・鈴猫）それぞれの公式キャラクター自身が演技する水彩絵本タッチのアイコンカットを生成・透過配置。
+3. `render_masterpiece_what_rich_dont_buy.py` により前回の神デザイン（1億円貯める方法）と同等の羊皮紙・手描き水彩ポスターとして再レンダリング完了。
+4. `create_what_rich_dont_buy_short.py` によりカード全体のイラストが切れることなく完全表示されるよう切り抜きとレイアウトを最適化し、個人版・スタジオ版ショート動画を再生成。
+5. `build_content.py` の実行、キャッシュバスター（`v=20261123v2`）の更新、GitHub Pagesへの反映・公開完了。
