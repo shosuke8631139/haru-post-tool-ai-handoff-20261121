@@ -51,26 +51,32 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
         return cover(source_full, (size, size))
 
     cropped = source_full.crop(crop_box)
-    bw, bh = cropped.size
-    ratio = 870.0 / bw
-    new_w, new_h = 870, round(bh * ratio)
-    banner_res = cropped.resize((new_w, new_h), Image.Resampling.LANCZOS)
+    cw, ch = cropped.size
+    scale = 1.78
+    new_w, new_h = round(cw * scale), round(ch * scale)
+    card_res = cropped.resize((new_w, new_h), Image.Resampling.LANCZOS)
 
-    plate = Image.new("RGBA", (size, size), (255, 255, 255, 255))
+    plate = Image.new("RGBA", (size, size), (255, 252, 246, 255))
     draw_p = ImageDraw.Draw(plate)
 
     # Top header inside card
     card_header_color = tag_color if tag_color else ((18, 35, 58) if not is_studio else (28, 124, 130))
-    draw_p.rounded_rectangle((35, 35, size - 35, 115), 18, fill=card_header_color)
-    draw_p.text((size // 2, 75), tag_title or "", font=font(30, True), fill="white", anchor="mm")
+    draw_p.rounded_rectangle((35, 30, size - 35, 110), 18, fill=card_header_color)
+    draw_p.text((size // 2, 70), tag_title or "", font=font(30, True), fill="white", anchor="mm")
 
-    # Banner in middle
-    by = 145
-    plate.paste(banner_res, ((size - new_w) // 2, by))
+    # Shadow around card
+    shadow = Image.new("RGBA", (new_w + 30, new_h + 30), (0, 0, 0, 0))
+    ImageDraw.Draw(shadow).rounded_rectangle((10, 10, new_w + 20, new_h + 20), 24, fill=(0, 0, 0, 55))
+    shadow = shadow.filter(ImageFilter.GaussianBlur(12))
+
+    cx = (size - new_w) // 2
+    cy = 138
+    plate.alpha_composite(shadow, (cx - 5, cy - 5))
+    plate.paste(card_res, (cx, cy))
 
     # Takeaway box below
     draw_p.rounded_rectangle(
-        (35, by + new_h + 25, size - 35, size - 35),
+        (35, cy + new_h + 25, size - 35, size - 25),
         22,
         fill=(245, 248, 252) if not is_studio else (244, 252, 250),
         outline=(210, 225, 240) if not is_studio else (200, 235, 230),
@@ -80,9 +86,9 @@ def make_card_layer(source_full, crop_box, size=940, is_studio=False, tag_title=
         lines = tag_subtitle.split("\n")
         title_sub = lines[0] if len(lines) > 0 else ""
         body_sub = "\n".join(lines[1:]) if len(lines) > 1 else ""
-        draw_p.text((size // 2, by + new_h + 65), title_sub, font=font(26, True), fill="#B91C1C" if not is_studio else "#E76F51", anchor="mm")
+        draw_p.text((size // 2, cy + new_h + 65), title_sub, font=font(26, True), fill="#C92A2A" if not is_studio else "#E76F51", anchor="mm")
         if body_sub:
-            draw_p.text((size // 2, by + new_h + 125), body_sub, font=font(22, False), fill="#172334", anchor="mm", align="center", spacing=8)
+            draw_p.text((size // 2, cy + new_h + 125), body_sub, font=font(22, False), fill="#172334", anchor="mm", align="center", spacing=8)
 
     return plate
 
@@ -182,46 +188,19 @@ def build_video(work, slides_dir, audio_path, output_name):
     return output, wav_duration(audio_path)
 
 
-NARRATION_TEXT = (
-    "今回ご紹介したいのは、本要約チャンネルの『金持ちが絶対買わないもの・上位1%の養分にならない6つのルール』です。"
-    "まじめに働いているのにお金が残らない原因は、収入ではなく資本主義の搾取構造にあります。"
-    "世のビジネスは、見栄や不安、孤独、恐怖を煽り、私たちからお金を吸い上げます。"
-    "富裕層が避けるのは、世間体の豪華な葬儀、新築戸建て、高額商材、孤独消費、不要な保険、そして宝くじの6つ。"
-    "代わりに激落ちくんや感動パンツなど生活を整えるアイテムを取り入れ、"
-    "浮いた資金を新NISAでインデックス投資に回し、資産として働かせる側に回るのです。"
-    "富裕層との差は収入ではなく意思決定の質。"
-    "今日から感情で買わされるのをやめ、未来の自由を手に入れませんか？"
-)
-
-
-async def synthesize_narration(audio_path):
-    mp3_path = audio_path.with_suffix(".mp3")
-    print("Synthesizing narration with ja-JP-NanamiNeural (rate=+12%)...")
-    comm = edge_tts.Communicate(NARRATION_TEXT, "ja-JP-NanamiNeural", rate="+12%")
-    await comm.save(str(mp3_path))
-    subprocess.run(
-        [ffmpeg, "-y", "-i", str(mp3_path), "-ar", "24000", "-ac", "1", "-c:a", "pcm_s16le", str(audio_path)],
-        check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL
-    )
-    print("Narration saved to:", audio_path)
-
-
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("variant", choices=["personal", "studio"])
     args = parser.parse_args()
 
     audio = OUT / "what_rich_dont_buy_narration.wav"
-    if not audio.exists():
-        asyncio.run(synthesize_narration(audio))
 
-    # Banner crop boxes from 1254x1254 infographic:
-    # 01: y=254..386, 02: y=396..528, 03: y=538..670, 04: y=680..812, 05: y=822..954, 06: y=964..1096
-    crop_01 = (28, 250, 1226, 390)
-    crop_02 = (28, 392, 1226, 532)
-    crop_03 = (28, 534, 1226, 674)
-    crop_05 = (28, 818, 1226, 958)
-    crop_06 = (28, 960, 1226, 1100)
+    # Card crops from 1254x1254 handcrafted infographic:
+    crop_01 = (55, 350, 430, 580)
+    crop_02 = (440, 350, 815, 580)
+    crop_03 = (825, 350, 1200, 580)
+    crop_05 = (440, 575, 815, 805)
+    crop_06 = (825, 575, 1200, 805)
 
     if args.variant == "personal":
         work = OUT / "what_rich_dont_buy_short"
