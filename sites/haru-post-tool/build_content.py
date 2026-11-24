@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "japan-stocks-inflation",
+        "file": "日本株_投稿セット.md",
+        "title": "エミン・ユルマズ・武者陵司『なぜこれから30年日本株は爆上げし続けるのか？』",
+        "sourceTitle": "参考動画：『なぜこれから30年日本株は爆上げし続けるのか？』本要約",
+        "sourceUrl": "https://youtu.be/qRqwtJ4VAgs",
+        "updatedAt": "2026年11月25日",
+        "personal": "日本株_個人版_インフォグラフィック.png",
+        "studio": "日本株_スタジオ版_インフォグラフィック.png",
+        "video": "日本株_個人版_動画.mp4",
+        "poster": "日本株_個人版_ポスター.png",
+        "videoLabel": "日本株とインフレ・個人版 127秒",
+        "videoDuration": "127秒",
+        "studioVideo": "日本株_スタジオ版_動画.mp4",
+        "studioPoster": "日本株_スタジオ版_ポスター.png",
+        "studioVideoLabel": "日本株とインフレ・スタジオ版 137秒",
+        "studioVideoDuration": "137秒",
+    },
+    {
         "id": "inflation-living",
         "file": "物価上昇_投稿セット.md",
         "title": "物価上昇に負けない 暮らしを守る６つのヒント",
