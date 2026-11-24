@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "psychology-of-money",
+        "file": "サイコロジー・オブ・マネー_投稿セット.md",
+        "title": "モーガン・ハウセル『サイコロジー・オブ・マネー 一生お金に困らない「富」のマインドセット』",
+        "sourceTitle": "参考動画：『サイコロジー・オブ・マネー 一生お金に困らない「富」のマインドセット』本要約",
+        "sourceUrl": "https://youtu.be/H3__XxCja1U",
+        "updatedAt": "2026年11月24日",
+        "personal": "サイコロジー・オブ・マネー_個人アカウント用.png",
+        "studio": "サイコロジー・オブ・マネー_ダンススタジオ用.png",
+        "video": "psychology_of_money_short/サイコロジー・オブ・マネー_ショート動画.mp4",
+        "poster": "psychology_of_money_short/slides/slide-01.png",
+        "videoLabel": "『サイコロジー・オブ・マネー』個人版46秒ショート",
+        "videoDuration": "46秒",
+        "studioVideo": "psychology_of_money_studio_short/サイコロジー・オブ・マネー_スタジオ版ショート動画.mp4",
+        "studioPoster": "psychology_of_money_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『サイコロジー・オブ・マネー』スタジオ版41秒ショート",
+    },
+    {
         "id": "what-rich-dont-buy",
         "file": "金持ちが絶対買わないもの_投稿セット.md",
         "title": "本要約チャンネル『金持ちが絶対買わないもの・上位1%の養分にならない6つのルール』",
