@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "inflation-living",
+        "file": "物価上昇_投稿セット.md",
+        "title": "物価上昇に負けない 暮らしを守る６つのヒント",
+        "sourceTitle": "参考動画：30年に1度のチャンス到来！本要約",
+        "sourceUrl": "https://youtu.be/G1Oq6Te4Xlk",
+        "updatedAt": "2026年11月25日",
+        "personal": "物価上昇_個人版_インフォグラフィック.png",
+        "studio": "物価上昇_スタジオ版_インフォグラフィック.png",
+        "video": "物価上昇_個人版_動画.mp4",
+        "poster": "物価上昇_個人版_ポスター.png",
+        "videoLabel": "物価上昇への備え・個人版 104秒",
+        "videoDuration": "104秒",
+        "studioVideo": "物価上昇_スタジオ版_動画.mp4",
+        "studioPoster": "物価上昇_スタジオ版_ポスター.png",
+        "studioVideoLabel": "物価上昇への備え・スタジオ版 110秒",
+        "studioVideoDuration": "110秒",
+    },
+    {
         "id": "food-investment",
         "file": "食べる投資_投稿セット.md",
         "title": "『食べる投資〜ハーバードが教える世界最高の食事術〜』",
