@@ -5,8 +5,12 @@ import wave
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont, ImageFilter
 import imageio_ffmpeg
+import sys
 
 ROOT = Path(r"C:\Users\kurro\.gemini\antigravity\scratch\haru-post-tool-ai-handoff-20261121")
+sys.path.append(str(ROOT))
+import generate_polished_short_cards as gsc
+
 OUT = ROOT / "outputs"
 ffmpeg = imageio_ffmpeg.get_ffmpeg_exe()
 
@@ -49,53 +53,6 @@ def center(draw, xy, value, size, fill, bold=True, spacing=10, stroke=0):
         stroke_width=stroke,
         stroke_fill=NAVY if stroke else None,
     )
-
-
-def make_scene_card(poster_path, char_crop_path, rule_num, rule_title, rule_catch, bg_color, is_studio=False):
-    card = Image.new("RGBA", (940, 940), bg_color)
-    c_draw = ImageDraw.Draw(card)
-
-    # Decorative inner border
-    c_draw.rounded_rectangle((20, 20, 920, 920), 40, outline="#E8D5B5" if not is_studio else "#F0C8D2", width=4)
-
-    # Top banner inside card
-    c_draw.rounded_rectangle((60, 50, 880, 150), 30, fill="#FFFFFF")
-    badge_color = "#E05275" if is_studio else "#028C69"
-    c_draw.rounded_rectangle((80, 65, 220, 135), 20, fill=badge_color)
-    c_draw.text((150, 100), f"RULE {rule_num}", font=font(32, True), fill="white", anchor="mm")
-    c_draw.text((250, 100), rule_title, font=font(40, True), fill=NAVY, anchor="lm")
-
-    # Poster slice / visual in the upper middle
-    poster = Image.open(poster_path).convert("RGBA")
-    # Take a nice sample crop from poster
-    p_slice = poster.resize((820, 480), Image.Resampling.LANCZOS)
-    p_slice_mask = Image.new("L", (820, 480), 0)
-    ImageDraw.Draw(p_slice_mask).rounded_rectangle((0, 0, 820, 480), 24, fill=255)
-    card.paste(p_slice, (60, 180), p_slice_mask)
-
-    # Bottom catchphrase pill
-    c_draw.rounded_rectangle((60, 690, 880, 900), 28, fill="#FFFFFF")
-    c_draw.multiline_text(
-        (470, 795),
-        rule_catch,
-        font=font(36, True),
-        fill=NAVY,
-        anchor="mm",
-        align="center",
-        spacing=12,
-    )
-
-    # Paste character on the right/left edge to add personality & 100% faithful design
-    if char_crop_path and Path(char_crop_path).exists():
-        char_img = Image.open(char_crop_path).convert("RGBA")
-        char_h = 360
-        ratio = char_h / char_img.height
-        char_w = int(char_img.width * ratio)
-        char_resized = char_img.resize((char_w, char_h), Image.Resampling.LANCZOS)
-        # Paste with alpha
-        card.alpha_composite(char_resized, (940 - char_w - 30, 940 - char_h - 20))
-
-    return card
 
 
 def make_slide(slides_dir, index, source_card, kicker, title, caption, accent, infographic=False, footer_text="HARUMICHI BOOK NOTE", bg_source=None):
@@ -204,7 +161,6 @@ def main():
         audio = OUT / "great_life_narration_personal.wav"
         work = OUT / "great_life_short"
         infographic = OUT / "グレートライフ_個人アカウント用.png"
-        char_crop = OUT / "raw_harumichi_top.png"
         output_name = "グレートライフ_ショート動画.mp4"
         accents = ["#028C69", "#D28D2B", "#028C69", "#C94A4A", "#028C69", "#C94A4A", "#028C69"]
         footer_text = "HARUMICHI  BOOK NOTE"
@@ -213,16 +169,16 @@ def main():
         work.mkdir(parents=True, exist_ok=True)
         slides_dir.mkdir(parents=True, exist_ok=True)
 
-        specs = [
-            ("01", "脚本家になれ！", "望む未来を自ら描く！\n受け身の人生は今すぐ卒業", (255, 250, 240, 255)),
-            ("02", "今すぐ第一歩！", "完璧なタイミングを待つな！\n残された時間で今すぐ踏み出す", (245, 250, 255, 255)),
-            ("03", "言い訳を排除！", "「時間がない」は即ゴミ箱へ！\n前向きな信念へアップデート", (255, 245, 245, 255)),
-            ("04", "何歳でも遅くない！", "「もう遅い」なんて絶対にない！\n今日が残りの人生で一番若い日", (255, 252, 240, 255)),
-            ("05", "人間関係は投資！", "愚痴や悪影響の縁を手放す！\n高め合える仲間と生きよう", (248, 245, 255, 255)),
-            ("06", "経済的自由の計画！", "収入の10%先取り貯蓄！\n不用品ゼロで身軽な人生へ", (245, 255, 250, 255)),
+        cards_data = [
+            (1, "★ RULE 01 ★", "脚本家になれ！", "望む未来を自ら描く！", "受け身の人生は今すぐ卒業しよう", accents[0], (255, 250, 240, 255)),
+            (2, "★ RULE 02 ★", "今すぐ第一歩！", "完璧なタイミングを待つな！", "残された時間で今すぐ踏み出そう", accents[1], (245, 250, 255, 255)),
+            (3, "★ RULE 03 ★", "言い訳を排除！", "「時間がない」は即ゴミ箱へ！", "前向きな信念へアップデートしよう", accents[2], (255, 245, 245, 255)),
+            (4, "★ RULE 04 ★", "何歳でも遅くない！", "「もう遅い」なんて絶対にない！", "今日が残りの人生で一番若い日だ", accents[3], (255, 252, 240, 255)),
+            (5, "★ RULE 05 ★", "人間関係は投資！", "愚痴や悪影響の縁を手放す！", "高め合える仲間と笑顔で生きよう", accents[4], (248, 245, 255, 255)),
+            (6, "★ RULE 06 ★", "経済的自由の計画！", "収入の10%先取り貯蓄！", "不用品ゼロで身軽な大冒険へ！", accents[5], (245, 255, 250, 255)),
         ]
 
-        cards = [make_scene_card(infographic, char_crop, s[0], s[1], s[2], s[3], False) for s in specs]
+        cards = [gsc.draw_personal_card(*c) for c in cards_data]
 
         slide_specs = [
             (cards[0], "BOOK NOTE", "人生最高の旅にする秘伝", "受け身をやめ、自分が主人公へ！\n望む未来の脚本を自ら描こう", accents[0], False),
@@ -237,7 +193,6 @@ def main():
         audio = OUT / "great_life_narration_studio.wav"
         work = OUT / "great_life_studio_short"
         infographic = OUT / "グレートライフ_ダンススタジオ用.png"
-        char_crop = OUT / "raw_haruka_top.png"
         output_name = "グレートライフ_スタジオ版ショート動画.mp4"
         accents = ["#E05275", "#2A8A7A", "#E05275", "#D28D2B", "#8A4FB5", "#2A8A7A", "#E05275"]
         footer_text = "HARUKA CLOVER STUDIO"
@@ -246,16 +201,16 @@ def main():
         work.mkdir(parents=True, exist_ok=True)
         slides_dir.mkdir(parents=True, exist_ok=True)
 
-        specs = [
-            ("01", "主人公になろう！", "自分のストーリーの主人公へ！\n未来の脚本は自分で書く！", (255, 248, 250, 255)),
-            ("02", "すぐ最初の一歩！", "完璧を待たずにジャンプ！\nワクワクする方へ飛び込もう！", (245, 252, 250, 255)),
-            ("03", "言い訳をポイッ！", "できない理由をポイッと手放す！\n前向きな信念へアップデート！", (255, 248, 248, 255)),
-            ("04", "今日が新しい始まり！", "何歳からだってスタートできる！\n今日が一番新しい始まり！", (255, 252, 240, 255)),
-            ("05", "大好きな人と生きる！", "プラスのエネルギーを大切に！\n大好きな人と笑顔でハイタッチ！", (250, 245, 255, 255)),
-            ("06", "シンプルなお金の計画！", "収入の10%先取り＆不用品ゼロ！\n身軽な暮らしで自由を手に入れよう！", (245, 255, 250, 255)),
+        cards_data = [
+            (1, "✨ MAGIC 01 ✨", "主人公になろう！", "自分のストーリーの主人公へ！", "未来の脚本は自分で書く！", accents[0], (255, 248, 250, 255)),
+            (2, "✨ MAGIC 02 ✨", "すぐ最初の一歩！", "完璧を待たずにジャンプ！", "ワクワクする方へ飛び込もう！", accents[1], (245, 252, 250, 255)),
+            (3, "✨ MAGIC 03 ✨", "言い訳をポイッ！", "できない理由をポイッと手放す！", "前向きな信念へアップデート！", accents[2], (255, 248, 248, 255)),
+            (4, "✨ MAGIC 04 ✨", "今日が新しい始まり！", "何歳からだってスタートできる！", "今日が一番新しい始まり！", accents[3], (255, 252, 240, 255)),
+            (5, "✨ MAGIC 05 ✨", "大好きな人と生きる！", "プラスのエネルギーを大切に！", "大好きな人と笑顔でハイタッチ！", accents[4], (250, 245, 255, 255)),
+            (6, "✨ MAGIC 06 ✨", "シンプルなお金の計画！", "収入の10%先取り＆不用品ゼロ！", "身軽な暮らしで自由を手に入れよう！", accents[5], (245, 255, 250, 255)),
         ]
 
-        cards = [make_scene_card(infographic, char_crop, s[0], s[1], s[2], s[3], True) for s in specs]
+        cards = [gsc.draw_studio_card(*c) for c in cards_data]
 
         slide_specs = [
             (cards[0], "MAGIC 01", "ストーリーの主人公になろう！", "他人の目を気にせず自分らしく！\n未来の脚本は自分で書く！", accents[0], False),
