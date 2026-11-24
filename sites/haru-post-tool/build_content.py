@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "food-investment",
+        "file": "食べる投資_投稿セット.md",
+        "title": "『食べる投資〜ハーバードが教える世界最高の食事術〜』",
+        "sourceTitle": "参考動画：『食べる投資』本要約",
+        "sourceUrl": "https://youtu.be/wusWQQnhVw8",
+        "updatedAt": "2026年11月24日",
+        "personal": "食べる投資_個人版_インフォグラフィック_v2.png",
+        "studio": "食べる投資_スタジオ版_インフォグラフィック_v2.png",
+        "video": "食べる投資_個人版_ショート動画.mp4",
+        "poster": "食べる投資_個人版_ポスター.png",
+        "videoLabel": "『食べる投資』個人版49秒ショート",
+        "videoDuration": "49秒",
+        "studioVideo": "食べる投資_スタジオ版_ショート動画.mp4",
+        "studioPoster": "食べる投資_スタジオ版_ポスター.png",
+        "studioVideoLabel": "『食べる投資』スタジオ版53秒ショート",
+        "studioVideoDuration": "53秒",
+    },
+    {
         "id": "great-life",
         "file": "グレートライフ_投稿セット.md",
         "title": "スコット・アラン『GREAT LIFE 一度しかない人生を最高の人生にする方法』",
@@ -253,7 +271,7 @@ def build_post(config: dict) -> dict:
             "label": config["studioVideoLabel"],
             "src": f"assets/{config['id']}/short-studio.mp4",
             "poster": f"assets/{config['id']}/short-studio-poster.png",
-            "duration": config.get("videoDuration", "53秒"),
+            "duration": config.get("studioVideoDuration", config.get("videoDuration", "53秒")),
         })
 
     return {

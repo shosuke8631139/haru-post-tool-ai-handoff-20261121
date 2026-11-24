@@ -1,6 +1,47 @@
 {
-  "latest": "great-life",
+  "latest": "food-investment",
   "items": [
+    {
+      "id": "food-investment",
+      "title": "『食べる投資〜ハーバードが教える世界最高の食事術〜』",
+      "sourceTitle": "参考動画：『食べる投資』本要約",
+      "sourceUrl": "https://youtu.be/wusWQQnhVw8",
+      "updatedAt": "2026年11月24日",
+      "longPost": "未来の自分への投資は、お金だけではありません。毎日の食事を少し見直すことも、健やかな暮らしを支える一歩です。\n\n今回の参考動画で紹介された、食卓に取り入れたい５つの食材を見てみましょう。\n\n① 山芋：すりおろしてご飯にかけたり、汁物に加えたり。いつもの献立に取り入れやすい食材です。\n\n② 納豆：手軽に食べられる発酵食品。ご飯と合わせるほか、薬味や野菜を添えても楽しめます。\n\n③ 豚肉・鶏レバー：たんぱく質や鉄を含む食材。十分に加熱し、他の食材と組み合わせて食べましょう。\n\n④ 色とりどりの野菜：緑、赤、黄色など、さまざまな種類を食卓に。季節の野菜を選ぶのも楽しいですね。\n\n⑤ サバ・イワシ：焼き魚や缶詰など、続けやすい方法で青魚を取り入れてみましょう。\n\n今日からできることは、いつもの食事に一品プラスすること。冷蔵庫にある食材から選び、無理なく続けてみませんか？\n\n特定の食品だけに頼らず、いろいろな食材を組み合わせる。毎日の小さな選択を、未来の健康への投資にしていきましょう。",
+      "mediumPost": "未来の自分への投資は、お金だけではありません。毎日の食事を少し見直すことも、健やかな暮らしを支える一歩です。\n\n参考動画『食べる投資』で紹介された５つの食材は、山芋、納豆、豚肉・鶏レバー、色とりどりの野菜、サバ・イワシ。\n\n山芋はすりおろしてご飯や汁物に。納豆は手軽な発酵食品として。豚肉や鶏レバーは十分に加熱し、野菜と組み合わせて。野菜はいろいろな種類を選び、青魚は焼き魚や缶詰で楽しめます。\n\n大切なのは、ひとつの食材だけに頼らず、食事全体をバランスよく楽しむこと。まずは、いつもの献立に一品プラスするところから始めてみませんか？",
+      "xPost": "未来の健康への「食べる投資」。山芋、納豆、豚肉・鶏レバー、色とりどりの野菜、サバ・イワシ。まずはいつもの食事に一品プラス。いろいろな食材をバランスよく楽しもう！",
+      "hashtags": "#食べる投資 #食習慣 #健康的な食事 #読書 #本要約 #毎日の習慣",
+      "images": [
+        {
+          "label": "個人アカウント用",
+          "src": "assets/food-investment/personal.png"
+        },
+        {
+          "label": "ダンススタジオ用",
+          "src": "assets/food-investment/studio.png"
+        }
+      ],
+      "video": {
+        "label": "『食べる投資』個人版49秒ショート",
+        "src": "assets/food-investment/short-personal.mp4",
+        "poster": "assets/food-investment/short-personal-poster.png",
+        "duration": "49秒"
+      },
+      "videos": [
+        {
+          "label": "『食べる投資』個人版49秒ショート",
+          "src": "assets/food-investment/short-personal.mp4",
+          "poster": "assets/food-investment/short-personal-poster.png",
+          "duration": "49秒"
+        },
+        {
+          "label": "『食べる投資』スタジオ版53秒ショート",
+          "src": "assets/food-investment/short-studio.mp4",
+          "poster": "assets/food-investment/short-studio-poster.png",
+          "duration": "53秒"
+        }
+      ]
+    },
     {
       "id": "great-life",
       "title": "スコット・アラン『GREAT LIFE 一度しかない人生を最高の人生にする方法』",
