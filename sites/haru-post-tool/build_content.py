@@ -10,6 +10,23 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "great-life",
+        "file": "グレートライフ_投稿セット.md",
+        "title": "スコット・アラン『GREAT LIFE 一度しかない人生を最高の人生にする方法』",
+        "sourceTitle": "参考動画：『GREAT LIFE 一度しかない人生を最高の人生にする方法』本要約",
+        "sourceUrl": "https://youtu.be/TFy-hbwTXnU",
+        "updatedAt": "2026年11月24日",
+        "personal": "グレートライフ_個人アカウント用.png",
+        "studio": "グレートライフ_ダンススタジオ用.png",
+        "video": "great_life_short/グレートライフ_ショート動画.mp4",
+        "poster": "great_life_short/slides/slide-01.png",
+        "videoLabel": "『グレートライフ』個人版51秒ショート",
+        "videoDuration": "51秒",
+        "studioVideo": "great_life_studio_short/グレートライフ_スタジオ版ショート動画.mp4",
+        "studioPoster": "great_life_studio_short/slides/slide-01.png",
+        "studioVideoLabel": "『グレートライフ』スタジオ版51秒ショート",
+    },
+    {
         "id": "psychology-of-money",
         "file": "サイコロジー・オブ・マネー_投稿セット.md",
         "title": "モーガン・ハウセル『サイコロジー・オブ・マネー 一生お金に困らない「富」のマインドセット』",
