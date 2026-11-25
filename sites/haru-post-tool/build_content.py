@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "mama-investor",
+        "file": "ママ投資家_投稿セット.md",
+        "title": "ちょる子『ママ投資家が育休中に１億貯めた株式投資』",
+        "sourceTitle": "参考動画：『ママ投資家が育休中に１億貯めた株式投資』本要約",
+        "sourceUrl": "https://youtu.be/wpatta-OWVU",
+        "updatedAt": "2026年11月26日",
+        "personal": "ママ投資家_個人版_インフォグラフィック.png",
+        "studio": "ママ投資家_スタジオ版_インフォグラフィック.png",
+        "video": "ママ投資家_個人版_動画.mp4",
+        "poster": "ママ投資家_個人版_ポスター.png",
+        "videoLabel": "株式投資を学ぶ・個人版 144秒",
+        "videoDuration": "144秒",
+        "studioVideo": "ママ投資家_スタジオ版_動画.mp4",
+        "studioPoster": "ママ投資家_スタジオ版_ポスター.png",
+        "studioVideoLabel": "株式投資を学ぶ・スタジオ版 154秒",
+        "studioVideoDuration": "154秒",
+    },
+    {
         "id": "gold-silver",
         "file": "金と銀_投稿セット.md",
         "title": "副島隆彦『金を握りしめた者が勝つ 銀は10倍になる』",
