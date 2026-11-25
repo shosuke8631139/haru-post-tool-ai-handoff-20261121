@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "life-choices",
+        "file": "人生は攻略できる_投稿セット.md",
+        "title": "橘玲『人生は攻略できる』",
+        "sourceTitle": "参考動画：『人生は攻略できる』本要約",
+        "sourceUrl": "https://youtu.be/teObCPv3l2s",
+        "updatedAt": "2026年11月26日",
+        "personal": "人生は攻略できる_個人版_インフォグラフィック.png",
+        "studio": "人生は攻略できる_スタジオ版_インフォグラフィック.png",
+        "video": "人生は攻略できる_個人版_動画.mp4",
+        "poster": "人生は攻略できる_個人版_ポスター.png",
+        "videoLabel": "人生の自由を広げる・個人版 127秒",
+        "videoDuration": "127秒",
+        "studioVideo": "人生は攻略できる_スタジオ版_動画.mp4",
+        "studioPoster": "人生は攻略できる_スタジオ版_ポスター.png",
+        "studioVideoLabel": "人生の自由を広げる・スタジオ版 136秒",
+        "studioVideoDuration": "136秒",
+    },
+    {
         "id": "mama-investor",
         "file": "ママ投資家_投稿セット.md",
         "title": "ちょる子『ママ投資家が育休中に１億貯めた株式投資』",
