@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "gold-silver",
+        "file": "金と銀_投稿セット.md",
+        "title": "副島隆彦『金を握りしめた者が勝つ 銀は10倍になる』",
+        "sourceTitle": "参考動画：『金を握りしめた者が勝つ 銀は10倍になる』本要約",
+        "sourceUrl": "https://youtu.be/0atZIODuVDQ",
+        "updatedAt": "2026年11月25日",
+        "personal": "金と銀_個人版_インフォグラフィック.png",
+        "studio": "金と銀_スタジオ版_インフォグラフィック.png",
+        "video": "金と銀_個人版_動画.mp4",
+        "poster": "金と銀_個人版_ポスター.png",
+        "videoLabel": "金と銀を考える・個人版 128秒",
+        "videoDuration": "128秒",
+        "studioVideo": "金と銀_スタジオ版_動画.mp4",
+        "studioPoster": "金と銀_スタジオ版_ポスター.png",
+        "studioVideoLabel": "金と銀を考える・スタジオ版 138秒",
+        "studioVideoDuration": "138秒",
+    },
+    {
         "id": "japan-stocks-inflation",
         "file": "日本株_投稿セット.md",
         "title": "エミン・ユルマズ・武者陵司『なぜこれから30年日本株は爆上げし続けるのか？』",
