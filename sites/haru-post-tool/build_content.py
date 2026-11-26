@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "think-again",
+        "file": "THINK_AGAIN_投稿セット.md",
+        "title": "アダム・グラント『THINK AGAIN 発想を変える、思い込みを手放す』",
+        "sourceTitle": "参考動画：『THINK AGAIN』本要約",
+        "sourceUrl": "https://youtu.be/0ZwSo8ugsjI",
+        "updatedAt": "2026年11月26日",
+        "personal": "THINK_AGAIN_個人版_インフォグラフィック.png",
+        "studio": "THINK_AGAIN_スタジオ版_インフォグラフィック.png",
+        "video": "THINK_AGAIN_個人版_動画.mp4",
+        "poster": "THINK_AGAIN_個人版_ポスター.png",
+        "videoLabel": "考え直す力・個人版 111秒",
+        "videoDuration": "111秒",
+        "studioVideo": "THINK_AGAIN_スタジオ版_動画.mp4",
+        "studioPoster": "THINK_AGAIN_スタジオ版_ポスター.png",
+        "studioVideoLabel": "考え直す力・スタジオ版 119秒",
+        "studioVideoDuration": "119秒",
+    },
+    {
         "id": "life-choices",
         "file": "人生は攻略できる_投稿セット.md",
         "title": "橘玲『人生は攻略できる』",
