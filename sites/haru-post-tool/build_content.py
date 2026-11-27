@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "new-class-society",
+        "file": "新しい階級社会_投稿セット.md",
+        "title": "橋本健二『新しい階級社会 最新データが明かす〈格差拡大の果て〉』",
+        "sourceTitle": "参考動画：『新しい階級社会』本要約",
+        "sourceUrl": "https://youtu.be/u2QKfmO-yzw",
+        "updatedAt": "2026年11月28日",
+        "personal": "新しい階級社会_個人版_インフォグラフィック_v2.png",
+        "studio": "新しい階級社会_スタジオ版_インフォグラフィック_v2.png",
+        "video": "新しい階級社会_個人版_動画.mp4",
+        "poster": "新しい階級社会_個人版_ポスター.png",
+        "videoLabel": "格差を知り社会を考える・個人版 136秒",
+        "videoDuration": "136秒",
+        "studioVideo": "新しい階級社会_スタジオ版_動画.mp4",
+        "studioPoster": "新しい階級社会_スタジオ版_ポスター.png",
+        "studioVideoLabel": "格差を知り社会を考える・スタジオ版 146秒",
+        "studioVideoDuration": "146秒",
+    },
+    {
         "id": "money-time",
         "file": "お金と時間_投稿セット.md",
         "title": "投資うさぎ『給料だけでは、お金持ちになれないから』",
