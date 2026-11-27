@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "gelatin-evidence",
+        "file": "ゼラチンを知る_投稿セット.md",
+        "title": "ゼラチンを知る 動画の主張と確認したいこと",
+        "sourceTitle": "参考動画：ゼラチンに関する動画",
+        "sourceUrl": "https://youtu.be/25MfSVf1dDA",
+        "updatedAt": "2026年11月28日",
+        "personal": "ゼラチンを知る_個人版_インフォグラフィック.png",
+        "studio": "ゼラチンを知る_スタジオ版_インフォグラフィック.png",
+        "video": "ゼラチンを知る_個人版_動画.mp4",
+        "poster": "ゼラチンを知る_個人版_ポスター.png",
+        "videoLabel": "ゼラチンを知る・個人版 120秒",
+        "videoDuration": "120秒",
+        "studioVideo": "ゼラチンを知る_スタジオ版_動画.mp4",
+        "studioPoster": "ゼラチンを知る_スタジオ版_ポスター.png",
+        "studioVideoLabel": "ゼラチンを知る・スタジオ版 128秒",
+        "studioVideoDuration": "128秒",
+    },
+    {
         "id": "new-class-society",
         "file": "新しい階級社会_投稿セット.md",
         "title": "橋本健二『新しい階級社会 最新データが明かす〈格差拡大の果て〉』",
