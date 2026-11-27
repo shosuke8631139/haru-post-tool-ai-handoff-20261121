@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "money-time",
+        "file": "お金と時間_投稿セット.md",
+        "title": "投資うさぎ『給料だけでは、お金持ちになれないから』",
+        "sourceTitle": "参考動画：『給料だけでは、お金持ちになれないから』本要約",
+        "sourceUrl": "https://youtu.be/As8Jz70ogvg",
+        "updatedAt": "2026年11月27日",
+        "personal": "お金と時間_個人版_インフォグラフィック_v2.png",
+        "studio": "お金と時間_スタジオ版_インフォグラフィック_v2.png",
+        "video": "お金と時間_個人版_動画.mp4",
+        "poster": "お金と時間_個人版_ポスター.png",
+        "videoLabel": "お金と時間を育てる・個人版 130秒",
+        "videoDuration": "130秒",
+        "studioVideo": "お金と時間_スタジオ版_動画.mp4",
+        "studioPoster": "お金と時間_スタジオ版_ポスター.png",
+        "studioVideoLabel": "お金と時間を育てる・スタジオ版 140秒",
+        "studioVideoDuration": "140秒",
+    },
+    {
         "id": "think-again",
         "file": "THINK_AGAIN_投稿セット.md",
         "title": "アダム・グラント『THINK AGAIN 発想を変える、思い込みを手放す』",
