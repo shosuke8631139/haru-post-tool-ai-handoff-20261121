@@ -10,6 +10,24 @@ OUTPUT = OUTPUT_DIR / "content.json"
 
 POSTS = [
     {
+        "id": "dividend-orchard",
+        "file": "配当を育てる_投稿セット.md",
+        "title": "配当太郎『新NISAで始める！年間240万円の配当金が入ってくる究極の株式投資』",
+        "sourceTitle": "参考動画：配当太郎『新NISAで始める！年間240万円の配当金が入ってくる究極の株式投資』本要約",
+        "sourceUrl": "https://youtu.be/vwwEFRXN2KU",
+        "updatedAt": "2026年11月28日",
+        "personal": "配当を育てる_個人版_インフォグラフィック.png",
+        "studio": "配当を育てる_スタジオ版_インフォグラフィック.png",
+        "video": "配当を育てる_個人版_動画.mp4",
+        "poster": "配当を育てる_個人版_ポスター.png",
+        "videoLabel": "配当を育てる・個人版 119秒",
+        "videoDuration": "119秒",
+        "studioVideo": "配当を育てる_スタジオ版_動画.mp4",
+        "studioPoster": "配当を育てる_スタジオ版_ポスター.png",
+        "studioVideoLabel": "配当を育てる・スタジオ版 128秒",
+        "studioVideoDuration": "128秒",
+    },
+    {
         "id": "gelatin-evidence",
         "file": "ゼラチンを知る_投稿セット.md",
         "title": "ゼラチンを知る 動画の主張と確認したいこと",
